@@ -1,5 +1,6 @@
 package com.example.Munchies.model.entity;
 
+import com.example.Munchies.model.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
