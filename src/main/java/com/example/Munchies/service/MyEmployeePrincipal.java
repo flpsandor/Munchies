@@ -4,6 +4,7 @@ import com.example.Munchies.model.entity.Employee;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class MyEmployeePrincipal implements UserDetails {

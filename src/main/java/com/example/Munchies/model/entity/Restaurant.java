@@ -18,6 +18,8 @@ public class Restaurant {
     private Long restaurantId;
     @Column(name = "restaurant_name")
     private String restaurantName;
+    @Column(name = "restaurant_short_name")
+    private String restaurantShortName;
     @Column(name = "restaurant_address")
     private String restaurantAddress;
     @Column(name = "restaurant_phone_number")
