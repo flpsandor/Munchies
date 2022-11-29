@@ -25,7 +25,7 @@ public class DeliveryInfo {
     @Column(name="delivery_info_updated")
     private LocalDateTime deliveryInfoUpdated;
 
-    @OneToOne (cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToOne (cascade = CascadeType.ALL)
     @JoinColumn(name="delivery_info_restaurant_id", referencedColumnName = "restaurant_id")
     private Restaurant restaurant;
 }

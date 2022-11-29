@@ -12,26 +12,36 @@
     <div class="row">
         <h2>Add restaurant</h2>
     </div>
-    <form method="post" th:action="@{/restaurants/update/{id}(id=${restaurant.restaurantId})}" th:object="${restaurant}">
+    <form method="post" th:action="@{/restaurants/update/{id}(id=${restaurant.restaurantId})}">
         <div class="form-group">
             <label for="restaurantName">Restaurant name</label>
-            <input class="form-control" id="restaurantName" placeholder="Enter restaurant name" th:field="*{restaurantName}"
+            <input class="form-control" id="restaurantName" placeholder="Enter restaurant name" th:field="*{restaurant.restaurantName}"
                    type="text">
         </div>
         <div class="form-group">
             <label for="restaurantAddress">Restaurant address</label>
-            <input class="form-control" id="restaurantAddress" placeholder="Enter restaurant address" th:field="*{restaurantAddress}"
+            <input class="form-control" id="restaurantAddress" placeholder="Enter restaurant address" th:field="*{restaurant.restaurantAddress}"
                    type="text">
         </div>
         <div class="form-group">
             <label for="restaurantPhone">Restaurant phone number</label>
-            <input class="form-control" id="restaurantPhone" placeholder="Enter restaurant phone number" th:field="*{restaurantPhoneNumber}"
+            <input class="form-control" id="restaurantPhone" placeholder="Enter restaurant phone number" th:field="*{restaurant.restaurantPhoneNumber}"
                    type="text">
         </div>
         <div class="form-group">
             <label for="restaurantMenuUrl">Restaurant menu URL</label>
-            <input class="form-control" id="restaurantMenuUrl" placeholder="Enter restaurant menu url" th:field="*{restaurantMenuUrl}"
+            <input class="form-control" id="restaurantMenuUrl" placeholder="Enter restaurant menu url" th:field="*{restaurant.restaurantMenuUrl}"
                    type="text">
+        </div>
+        <div class="form-group">
+            <label for="deliveryTime">Delivery time</label>
+            <input class="form-control" id="deliveryTime" placeholder="Enter restaurant delivery time"
+                   th:field="*{deliveryinfo.deliveryInfoTime}" type="text">
+        </div>
+        <div class="form-group">
+            <label for="deliveryCharges">Delivery charges</label>
+            <input class="form-control" id="deliveryCharges"
+                   placeholder="Enter restaurant delivery charges" th:field="*{deliveryinfo.deliveryInfoAdditionalCharges}" type="text">
         </div>
         <button class="btn btn-primary margin-top" type="submit">Submit</button>
     </form>

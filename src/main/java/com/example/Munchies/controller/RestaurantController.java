@@ -1,18 +1,24 @@
 package com.example.Munchies.controller;
 
+import com.example.Munchies.model.entity.DeliveryInfo;
 import com.example.Munchies.model.entity.Restaurant;
+import com.example.Munchies.service.DeliveryInfoService;
 import com.example.Munchies.service.RestaurantService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
+    private final DeliveryInfoService deliveryInfoService;
 
-    public RestaurantController(RestaurantService restaurantService) {
+    public RestaurantController(RestaurantService restaurantService, DeliveryInfoService deliveryInfoService) {
         this.restaurantService = restaurantService;
+        this.deliveryInfoService = deliveryInfoService;
     }
 
     @GetMapping("/restaurants")
@@ -24,22 +30,27 @@ public class RestaurantController {
 
     @GetMapping("/restaurants/restaurant-details/{id}")
     public String restaurantDetails(@PathVariable("id") Long id, Model model) {
-        Restaurant restaurant = restaurantService.findById(id)
+        var restaurant = restaurantService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant with Id:" + id));
-        model.addAttribute("restaurants", restaurant);
+        var deliveryInfo = deliveryInfoService.findByRestaurant(restaurant).get();
+        model.addAttribute("restaurant", restaurant);
+        model.addAttribute("deliveryinfo", deliveryInfo);
         return "restaurant-details";
     }
 
     @GetMapping("/restaurants/add")
     public String addNewRestaurant(Model model){
         Restaurant restaurant = new Restaurant();
+        DeliveryInfo deliveryInfo = new DeliveryInfo();
         model.addAttribute("restaurant", restaurant);
+        model.addAttribute("deliveryinfo", deliveryInfo);
         return "add-restaurant";
     }
 
     @PostMapping("/restaurants/save")
-    public String saveRestaurant(@ModelAttribute("restaurant") Restaurant restaurant){
+    public String saveRestaurant(@ModelAttribute("deliveryinfo") DeliveryInfo deliveryInfo, @ModelAttribute("restaurant") Restaurant restaurant){
         restaurantService.save(restaurant);
+        deliveryInfoService.save(restaurant, deliveryInfo);
         return "redirect:/restaurants/";
     }
 
@@ -47,13 +58,16 @@ public class RestaurantController {
     public String editRestaurant(@PathVariable("id") Long id, Model model) {
         Restaurant restaurant = restaurantService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant with Id:" + id));
+        Optional<DeliveryInfo> deliveryInfo = deliveryInfoService.findByRestaurant(restaurant);
         model.addAttribute("restaurant", restaurant);
+        model.addAttribute("deliveryinfo", deliveryInfo);
         return "update-restaurant";
     }
 
     @PostMapping("/restaurants/update/{id}")
-    public String updateRestaurant(@PathVariable("id") Long id, Restaurant restaurant, Model model){
+    public String updateRestaurant(@PathVariable("id") Long id, Restaurant restaurant, DeliveryInfo deliveryInfo){
         restaurantService.update(id, restaurant);
+        deliveryInfoService.update(restaurantService.findById(id).get(), deliveryInfo);
         return "redirect:/restaurants/";
     }
 
@@ -61,6 +75,7 @@ public class RestaurantController {
     public String deleteRestaurant(@PathVariable Long id) {
         Restaurant restaurant = restaurantService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant with Id:" + id));
+        deliveryInfoService.delete(restaurant);
         restaurantService.delete(restaurant);
         return "redirect:/restaurants/";
     }
