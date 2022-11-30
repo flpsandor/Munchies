@@ -8,8 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @Controller
 public class RestaurantController {
 
@@ -30,16 +28,15 @@ public class RestaurantController {
 
     @GetMapping("/restaurants/restaurant-details/{id}")
     public String restaurantDetails(@PathVariable("id") Long id, Model model) {
-        var restaurant = restaurantService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant with Id:" + id));
-        var deliveryInfo = deliveryInfoService.findByRestaurant(restaurant).get();
+        var restaurant = restaurantService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid restaurant with Id:" + id));
+        var deliveryInfo = deliveryInfoService.findByRestaurant(restaurant).orElseThrow(() -> new IllegalArgumentException("Invalid deliveryInfo with restaurant with Id:" + id));
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("deliveryinfo", deliveryInfo);
         return "restaurant-details";
     }
 
     @GetMapping("/restaurants/add")
-    public String addNewRestaurant(Model model){
+    public String addNewRestaurant(Model model) {
         Restaurant restaurant = new Restaurant();
         DeliveryInfo deliveryInfo = new DeliveryInfo();
         model.addAttribute("restaurant", restaurant);
@@ -48,7 +45,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/restaurants/save")
-    public String saveRestaurant(@ModelAttribute("deliveryinfo") DeliveryInfo deliveryInfo, @ModelAttribute("restaurant") Restaurant restaurant){
+    public String saveRestaurant(@ModelAttribute("deliveryinfo") DeliveryInfo deliveryInfo, @ModelAttribute("restaurant") Restaurant restaurant) {
         restaurantService.save(restaurant);
         deliveryInfoService.save(restaurant, deliveryInfo);
         return "redirect:/restaurants/";
@@ -56,16 +53,15 @@ public class RestaurantController {
 
     @GetMapping("/restaurants/edit/{id}")
     public String editRestaurant(@PathVariable("id") Long id, Model model) {
-        Restaurant restaurant = restaurantService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant with Id:" + id));
-        Optional<DeliveryInfo> deliveryInfo = deliveryInfoService.findByRestaurant(restaurant);
+        Restaurant restaurant = restaurantService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid restaurant with Id:" + id));
+        DeliveryInfo deliveryInfo = deliveryInfoService.findByRestaurant(restaurant).orElseThrow(() -> new IllegalArgumentException("Invalid deliveryinfo for restaurant with Id:" + id));
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("deliveryinfo", deliveryInfo);
         return "update-restaurant";
     }
 
     @PostMapping("/restaurants/update/{id}")
-    public String updateRestaurant(@PathVariable("id") Long id, Restaurant restaurant, DeliveryInfo deliveryInfo){
+    public String updateRestaurant(@PathVariable("id") Long id, Restaurant restaurant, DeliveryInfo deliveryInfo) {
         restaurantService.update(id, restaurant);
         deliveryInfoService.update(restaurantService.findById(id).get(), deliveryInfo);
         return "redirect:/restaurants/";
@@ -73,8 +69,7 @@ public class RestaurantController {
 
     @GetMapping("/restaurants/delete/{id}")
     public String deleteRestaurant(@PathVariable Long id) {
-        Restaurant restaurant = restaurantService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant with Id:" + id));
+        Restaurant restaurant = restaurantService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid restaurant with Id:" + id));
         deliveryInfoService.delete(restaurant);
         restaurantService.delete(restaurant);
         return "redirect:/restaurants/";

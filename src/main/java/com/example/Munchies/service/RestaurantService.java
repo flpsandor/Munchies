@@ -1,8 +1,6 @@
 package com.example.Munchies.service;
 
-import com.example.Munchies.model.entity.DeliveryInfo;
 import com.example.Munchies.model.entity.Restaurant;
-import com.example.Munchies.repository.DeliveryInfoRepository;
 import com.example.Munchies.repository.RestaurantRepository;
 import org.springframework.stereotype.Service;
 
