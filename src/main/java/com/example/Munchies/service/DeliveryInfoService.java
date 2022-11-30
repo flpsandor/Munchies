@@ -27,19 +27,21 @@ public class DeliveryInfoService {
     }
 
     public void update(Restaurant restaurant, DeliveryInfo deliveryInfo){
-        Optional<DeliveryInfo> deliveryInfoDb = deliveryInfoRepository.findDeliveryInfoByRestaurant(restaurant);
+        var deliveryInfoDb = deliveryInfoRepository.findDeliveryInfoByRestaurant(restaurant);
         if(deliveryInfoDb.isPresent()){
             var updatedDeliveryInfo = deliveryInfoDb.get();
+            updatedDeliveryInfo.setDeliveryInfoId(updatedDeliveryInfo.getDeliveryInfoId());
             updatedDeliveryInfo.setRestaurant(restaurant);
             updatedDeliveryInfo.setDeliveryInfoCreated(deliveryInfoDb.get().getDeliveryInfoCreated());
             updatedDeliveryInfo.setDeliveryInfoUpdated(LocalDateTime.now());
             updatedDeliveryInfo.setDeliveryInfoTime(deliveryInfo.getDeliveryInfoTime());
             updatedDeliveryInfo.setDeliveryInfoAdditionalCharges(deliveryInfo.getDeliveryInfoAdditionalCharges());
-            deliveryInfoRepository.save(deliveryInfo);
+            deliveryInfoRepository.save(updatedDeliveryInfo);
         }
     }
 
     public void delete(Restaurant restaurant) {
-        deliveryInfoRepository.delete(deliveryInfoRepository.findDeliveryInfoByRestaurant(restaurant).get());
+        var deliveryInfo = deliveryInfoRepository.findDeliveryInfoByRestaurant(restaurant);
+        deliveryInfo.ifPresent(deliveryInfoRepository::delete);
     }
 }
