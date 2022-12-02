@@ -10,6 +10,4 @@ public class MunchiesApplication {
     public static void main(String[] args) {
         SpringApplication.run(MunchiesApplication.class, args);
     }
-
-
 }

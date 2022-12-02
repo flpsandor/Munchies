@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,7 +15,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class DeliveryInfoDTO {
     private Long deliveryInfoId;
+    @Min(value = 0, message = "Delivery time must be more or equal then zero")
     private int deliveryInfoTime;
+    @Min(value = 0, message = "Delivery charges must be more or equal then zero")
     private double deliveryInfoAdditionalCharges;
     private LocalDateTime deliveryInfoCreated;
     private LocalDateTime deliveryInfoUpdated;
