@@ -5,15 +5,19 @@ import com.example.Munchies.model.dto.RestaurantDTO;
 import com.example.Munchies.service.RestaurantService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
+
 @Controller
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
+
     public RestaurantController(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
     }
@@ -34,15 +38,16 @@ public class RestaurantController {
 
     @GetMapping("/restaurants/add")
     public String addNewRestaurant(Model model) {
-        RestaurantDTO restaurant = new RestaurantDTO();
-        DeliveryInfoDTO deliveryInfo = new DeliveryInfoDTO();
-        model.addAttribute("restaurant", restaurant);
-        model.addAttribute("deliveryinfo", deliveryInfo);
+        model.addAttribute("restaurant", new RestaurantDTO());
+        model.addAttribute("deliveryinfo", new DeliveryInfoDTO());
         return "add-restaurant";
     }
 
     @PostMapping("/restaurants/save")
-    public String saveRestaurant(@ModelAttribute("deliveryinfo") DeliveryInfoDTO deliveryInfo, @ModelAttribute("restaurant") RestaurantDTO restaurant) {
+    public String saveRestaurant(@ModelAttribute("deliveryinfo") @Valid DeliveryInfoDTO deliveryInfo, @ModelAttribute("restaurant") @Valid RestaurantDTO restaurant, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "add-restaurant";
+        }
         restaurantService.save(restaurant, deliveryInfo);
         return "redirect:/restaurants/";
     }
@@ -55,9 +60,12 @@ public class RestaurantController {
     }
 
     @PostMapping("/restaurants/update/{id}")
-    public String updateRestaurant(@PathVariable("id") Long id, RestaurantDTO restaurant, DeliveryInfoDTO deliveryInfo) {
-        restaurantService.update(id, restaurant, deliveryInfo);
-        return "redirect:/restaurants/";
+    public String updateRestaurant(@PathVariable("id") Long id, @Valid @ModelAttribute("restaurant") RestaurantDTO restaurant, @Valid @ModelAttribute("deliveryinfo") DeliveryInfoDTO deliveryInfo, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "update-restaurant";
+        }
+        restaurantService.updateRestaurant(id, restaurant, deliveryInfo);
+        return "redirect:/restaurants/restaurant-details/{id}/";
     }
 
     @GetMapping("/restaurants/delete/{id}")

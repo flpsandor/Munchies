@@ -69,29 +69,26 @@ public class RestaurantService {
     }
 
     public DeliveryInfoDTO createDeliveryDtoFromRestaurantId(Long id) {
-        return mapDeliveryInfoToDto(deliveryInfoRepository.findDeliveryInfoByRestaurant(restaurantRepository.findById(id).get()));
+        return mapDeliveryInfoToDto(deliveryInfoRepository.findDeliveryInfoByRestaurant(restaurantRepository.findByRestaurantId(id)));
     }
 
-    public void update(Long id, RestaurantDTO restaurant, DeliveryInfoDTO deliveryInfo) {
-        var restaurantData = mapRestaurantToEntity(restaurant);
-        var deliveryInfoData = mapDeliveryInfoToEntity(deliveryInfo);
+    public void updateRestaurant(Long id, RestaurantDTO restaurant, DeliveryInfoDTO deliveryInfo) {
+        var updatedRestaurant = restaurantRepository.findByRestaurantId(id);
 
-        var updatedRestaurant = restaurantRepository.findById(id).get();
-        updatedRestaurant.setRestaurantName(restaurantData.getRestaurantName());
-        updatedRestaurant.setRestaurantShortName(restaurantData.getRestaurantName().replaceAll("\\s+", "_").toLowerCase());
+        updatedRestaurant.setRestaurantName(restaurant.getRestaurantName());
+        updatedRestaurant.setRestaurantShortName(restaurant.getRestaurantName().replaceAll("\\s+", "_").toLowerCase());
         updatedRestaurant.setRestaurantUpdated(LocalDateTime.now());
-        updatedRestaurant.setRestaurantAddress(restaurantData.getRestaurantAddress());
-        updatedRestaurant.setRestaurantMenuUrl(restaurantData.getRestaurantMenuUrl());
-        updatedRestaurant.setRestaurantPhoneNumber(restaurantData.getRestaurantPhoneNumber());
+        updatedRestaurant.setRestaurantAddress(restaurant.getRestaurantAddress());
+        updatedRestaurant.setRestaurantMenuUrl(restaurant.getRestaurantMenuUrl());
+        updatedRestaurant.setRestaurantPhoneNumber(restaurant.getRestaurantPhoneNumber());
 
         restaurantRepository.save(updatedRestaurant);
 
         var updatedDeliveryInfo = deliveryInfoRepository.findDeliveryInfoByRestaurant(updatedRestaurant);
         updatedDeliveryInfo.setDeliveryInfoUpdated(LocalDateTime.now());
-        updatedDeliveryInfo.setDeliveryInfoTime(deliveryInfoData.getDeliveryInfoTime());
-        updatedDeliveryInfo.setDeliveryInfoAdditionalCharges(deliveryInfoData.getDeliveryInfoAdditionalCharges());
+        updatedDeliveryInfo.setDeliveryInfoTime(deliveryInfo.getDeliveryInfoTime());
+        updatedDeliveryInfo.setDeliveryInfoAdditionalCharges(deliveryInfo.getDeliveryInfoAdditionalCharges());
 
         deliveryInfoRepository.save(updatedDeliveryInfo);
     }
-
 }
