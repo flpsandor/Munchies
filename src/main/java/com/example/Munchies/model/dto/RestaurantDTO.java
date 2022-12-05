@@ -2,7 +2,6 @@ package com.example.Munchies.model.dto;
 
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
-import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
