@@ -61,7 +61,7 @@ public class RestaurantController {
 
     @PostMapping("/restaurants/update/{id}")
     public String updateRestaurant(@PathVariable("id") Long id, @Valid @ModelAttribute("restaurant") RestaurantDTO restaurant, BindingResult result1, @Valid @ModelAttribute("deliveryinfo") DeliveryInfoDTO deliveryInfo, BindingResult result2) {
-        if (result1.hasErrors() || result2.hasErrors()) {
+        if (result1.hasErrors() || result2.hasErrors()){
             return "update-restaurant";
         }
         restaurantService.updateRestaurant(id, restaurant, deliveryInfo);
