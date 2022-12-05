@@ -34,6 +34,11 @@ public class SecurityConfiguration {
                 .anyRequest()
                 .authenticated()
                 .and()
+                .formLogin()
+                .loginPage("/login.html")
+                .defaultSuccessUrl("/index", true)
+                .permitAll()
+                .and()
                 .httpBasic();
         return http.build();
     }
