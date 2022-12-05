@@ -28,13 +28,13 @@
 </div>
 <div class="container">
     <div class="row">
-        <h1>List of restaurants</h1>
+        <h2>List of restaurants</h2>
     </div>
 </div>
 <div class="container">
     <table class="table table-hover">
         <thead>
-        <tr>
+        <tr class="table-dark">
             <th scope="col">Restaurant name</th>
             <th scope="col">Restaurant short name</th>
             <th scope="col">Address</th>
@@ -45,7 +45,7 @@
         </thead>
         <tbody>
         <tr th:each="restaurant: ${restaurants}">
-            <td th:text="${restaurant.restaurantName}"></td>
+            <th scope="row" th:text="${restaurant.restaurantName}"></th>
             <td th:text="${restaurant.restaurantShortName}"></td>
             <td th:text="${restaurant.restaurantAddress}"></td>
             <td th:text="${restaurant.restaurantPhoneNumber}"></td>
