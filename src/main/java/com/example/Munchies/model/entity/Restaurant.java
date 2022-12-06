@@ -1,6 +1,9 @@
 package com.example.Munchies.model.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name="restaurant")
+@Table(name = "restaurant")
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +27,18 @@ public class Restaurant {
     private String restaurantAddress;
     @Column(name = "restaurant_phone_number")
     private String restaurantPhoneNumber;
-    @Column(name="restaurant_menu_url")
+    @Column(name = "restaurant_menu_url")
     private String restaurantMenuUrl;
-    @Column(name="restaurant_created")
+    @Column(name = "restaurant_created")
     private LocalDateTime restaurantCreated;
-    @Column(name="restaurant_updated")
+    @Column(name = "restaurant_updated")
     private LocalDateTime restaurantUpdated;
+
+    public void setDeliveryInfo(){
+        deliveryInfo.setRestaurant(this);
+    }
+
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "restaurant")
+    private DeliveryInfo deliveryInfo;
+
 }

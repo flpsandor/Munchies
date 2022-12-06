@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +36,14 @@ public class SecurityConfiguration {
                 .authenticated()
                 .and()
                 .formLogin()
-                .permitAll();
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .permitAll()
+                .failureUrl("/login?error=true")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .addLogoutHandler(new SecurityContextLogoutHandler());
         return http.build();
     }
 }

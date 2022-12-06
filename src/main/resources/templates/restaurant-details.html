@@ -79,11 +79,11 @@
                 </tr>
                 <tr>
                     <td>Delivery time</td>
-                    <td th:text="*{deliveryinfo.deliveryInfoTime}"></td>
+                    <td th:text="*{restaurant.getDeliveryInfo().deliveryInfoTime}"></td>
                 </tr>
                 <tr>
                     <td>Delivery charges</td>
-                    <td th:text="*{deliveryinfo.deliveryInfoAdditionalCharges}">/td>
+                    <td th:text="*{restaurant.getDeliveryInfo().deliveryInfoAdditionalCharges}">/td>
                 </tr>
                 </tbody>
             </table>

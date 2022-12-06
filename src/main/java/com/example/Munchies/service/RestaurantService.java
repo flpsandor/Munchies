@@ -1,8 +1,7 @@
 package com.example.Munchies.service;
 
-import com.example.Munchies.model.dto.DeliveryInfoDTO;
+import com.example.Munchies.model.dto.RestaurantCreationDTO;
 import com.example.Munchies.model.dto.RestaurantDTO;
-import com.example.Munchies.model.entity.DeliveryInfo;
 import com.example.Munchies.model.entity.Restaurant;
 import com.example.Munchies.repository.DeliveryInfoRepository;
 import com.example.Munchies.repository.RestaurantRepository;
@@ -10,8 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RestaurantService {
@@ -26,69 +25,50 @@ public class RestaurantService {
         this.modelMapper = modelMapper;
     }
 
-    private RestaurantDTO mapRestaurantToDto(Restaurant restaurant) {
-        return modelMapper.map(restaurant, RestaurantDTO.class);
+    public String setShortName(String name) {
+        return name.replaceAll("\\s+", "_").toLowerCase();
     }
 
-    private Restaurant mapRestaurantToEntity(RestaurantDTO restaurantDTO) {
-        return modelMapper.map(restaurantDTO, Restaurant.class);
-    }
-
-    private DeliveryInfoDTO mapDeliveryInfoToDto(DeliveryInfo deliveryInfo) {
-        return modelMapper.map(deliveryInfo, DeliveryInfoDTO.class);
-    }
-
-    private DeliveryInfo mapDeliveryInfoToEntity(DeliveryInfoDTO deliveryInfoDTO) {
-        return modelMapper.map(deliveryInfoDTO, DeliveryInfo.class);
+    public LocalDateTime dateTimeNow() {
+        return LocalDateTime.now();
     }
 
     public List<RestaurantDTO> findAll() {
-        return restaurantRepository.findAll().stream().map(this::mapRestaurantToDto).collect(Collectors.toList());
+        // fix latter
+        ArrayList<RestaurantDTO> restaurants = new ArrayList<>();
+        for (var restaurant : restaurantRepository.findAll()) {
+            restaurants.add(modelMapper.map(restaurant, RestaurantDTO.class));
+        }
+        return restaurants;
     }
 
-    public void save(RestaurantDTO restaurant, DeliveryInfoDTO deliveryInfo) {
-        var restaurantSave = mapRestaurantToEntity(restaurant);
-        var deliveryInfoSave = mapDeliveryInfoToEntity(deliveryInfo);
-        deliveryInfoSave.setRestaurant(restaurantSave);
-        deliveryInfoSave.setDeliveryInfoCreated(LocalDateTime.now());
-        restaurantSave.setRestaurantCreated(LocalDateTime.now());
-        restaurantSave.setRestaurantShortName(restaurant.getRestaurantName().replaceAll("\\s+", "_").toLowerCase());
-        deliveryInfoRepository.save(deliveryInfoSave);
+    public RestaurantDTO createRestaurant(RestaurantCreationDTO restaurant) {
+        var restaurantSave = modelMapper.map(restaurant, Restaurant.class);
+        restaurantSave.setRestaurantShortName(setShortName(restaurant.getRestaurantName()));
+        restaurantSave.setRestaurantCreated(dateTimeNow());
+        restaurantSave.setDeliveryInfo();
         restaurantRepository.save(restaurantSave);
+        return modelMapper.map(restaurantSave, RestaurantDTO.class);
     }
 
-    public void delete(Long id) {
-        var restaurant = restaurantRepository.findByRestaurantId(id);
-        var deliveryInfo = deliveryInfoRepository.findDeliveryInfoByRestaurant(restaurant);
-        deliveryInfoRepository.delete(deliveryInfo);
-        restaurantRepository.delete(restaurant);
+    public void deleteRestaurant(Long id) {
+        var restaurantDb = restaurantRepository.findById(id);
+        restaurantDb.ifPresent(value -> {
+            restaurantRepository.delete(value);
+            deliveryInfoRepository.delete(value.getDeliveryInfo());
+        });
     }
 
-    public RestaurantDTO createRestaurantDtoById(Long id) {
-        return mapRestaurantToDto(restaurantRepository.findByRestaurantId(id));
+    public RestaurantDTO restaurantDetails(Long id) {
+        var restaurantDb = restaurantRepository.findById(id);
+        if (restaurantDb.isEmpty()) {
+            return null;
+        }
+        return modelMapper.map(restaurantDb.get(), RestaurantDTO.class);
     }
 
-    public DeliveryInfoDTO createDeliveryDtoFromRestaurantId(Long id) {
-        return mapDeliveryInfoToDto(deliveryInfoRepository.findDeliveryInfoByRestaurant(restaurantRepository.findByRestaurantId(id)));
-    }
-
-    public void updateRestaurant(Long id, RestaurantDTO restaurant, DeliveryInfoDTO deliveryInfo) {
-        var updatedRestaurant = restaurantRepository.findByRestaurantId(id);
-
-        updatedRestaurant.setRestaurantName(restaurant.getRestaurantName());
-        updatedRestaurant.setRestaurantShortName(restaurant.getRestaurantName().replaceAll("\\s+", "_").toLowerCase());
-        updatedRestaurant.setRestaurantUpdated(LocalDateTime.now());
-        updatedRestaurant.setRestaurantAddress(restaurant.getRestaurantAddress());
-        updatedRestaurant.setRestaurantMenuUrl(restaurant.getRestaurantMenuUrl());
-        updatedRestaurant.setRestaurantPhoneNumber(restaurant.getRestaurantPhoneNumber());
-
-        restaurantRepository.save(updatedRestaurant);
-
-        var updatedDeliveryInfo = deliveryInfoRepository.findDeliveryInfoByRestaurant(updatedRestaurant);
-        updatedDeliveryInfo.setDeliveryInfoUpdated(LocalDateTime.now());
-        updatedDeliveryInfo.setDeliveryInfoTime(deliveryInfo.getDeliveryInfoTime());
-        updatedDeliveryInfo.setDeliveryInfoAdditionalCharges(deliveryInfo.getDeliveryInfoAdditionalCharges());
-
-        deliveryInfoRepository.save(updatedDeliveryInfo);
+    public RestaurantDTO updateRestaurant(Long id, RestaurantCreationDTO restaurant) {
+        var restaurantDb = restaurantRepository.findById(id);
+        return null;
     }
 }
