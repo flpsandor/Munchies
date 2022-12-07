@@ -37,7 +37,6 @@ public class Restaurant {
     public void setDeliveryInfo(){
         deliveryInfo.setRestaurant(this);
         deliveryInfo.setDeliveryInfoCreated(this.restaurantCreated);
-        deliveryInfo.setDeliveryInfoUpdated(this.restaurantUpdated);
     }
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "restaurant")

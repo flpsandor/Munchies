@@ -30,7 +30,7 @@
     <div class="row">
         <h2>Update restaurant</h2>
     </div>
-    <form method="post" th:action="@{/restaurants/update/{id}(id=${restaurant.restaurantId})}">
+    <form method="post" th:action="@{/restaurants/update/{id}(id=${id})}">
         <div class="form-group">
             <label for="restaurantName">Restaurant name</label>
             <input class="form-control" id="restaurantName" placeholder="Enter restaurant name" th:field="*{restaurant.restaurantName}"
@@ -65,11 +65,11 @@
         </div>
         <div class="form-group">
             <label for="deliverytime">Delivery time</label>
-            <input class="form-control" id="deliverytime"  th:attr="value=*{restaurant.getDeliveryInfo().deliveryInfoTime}" type="text">
+            <input class="form-control" id="deliverytime" th:field="*{restaurant.deliveryInfoTime}" type="text">
         </div>
         <div class="form-group">
-            <label for="deliverycharges">Delivery charges</label>
-            <input class="form-control" id="deliverycharges"  th:attr="value=*{restaurant.getDeliveryInfo().deliveryInfoAdditionalCharges}" type="text">
+            <label for="deliveryinfocharges">Delivery charges</label>
+            <input class="form-control" id="deliveryinfocharges"  th:field="*{restaurant.deliveryInfoAdditionalCharges}" type="text">
         </div>
         <button class="btn btn-primary margin-top" type="submit">Submit</button>
     </form>

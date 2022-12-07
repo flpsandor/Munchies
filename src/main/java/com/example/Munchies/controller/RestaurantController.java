@@ -52,7 +52,8 @@ public class RestaurantController {
 
     @GetMapping("/restaurants/edit/{id}")
     public String editRestaurant(@PathVariable("id") Long id, Model model){
-        model.addAttribute("restaurant", restaurantService.restaurantDetails(id));
+        model.addAttribute("id", id);
+        model.addAttribute("restaurant", restaurantService.restaurantUpdateCreation(id));
         return "update-restaurant";
     }
 
