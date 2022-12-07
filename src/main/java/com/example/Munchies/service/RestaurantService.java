@@ -67,6 +67,14 @@ public class RestaurantService {
         return modelMapper.map(restaurantDb.get(), RestaurantDTO.class);
     }
 
+    public RestaurantCreationDTO restaurantUpdateCreation(Long id) {
+        var restaurantDb = restaurantRepository.findById(id);
+        if (restaurantDb.isEmpty()) {
+            return null;
+        }
+        return modelMapper.map(restaurantDb.get(), RestaurantCreationDTO.class);
+    }
+
     public RestaurantDTO updateRestaurant(Long id, RestaurantCreationDTO restaurant) {
         var restaurantDb = restaurantRepository.findById(id);
         restaurantDb.ifPresent(value -> {
@@ -76,21 +84,11 @@ public class RestaurantService {
             restaurantUpdate.setRestaurantAddress(restaurant.getRestaurantAddress());
             restaurantUpdate.setRestaurantShortName(setShortName(restaurant.getRestaurantName()));
             restaurantUpdate.setRestaurantPhoneNumber(restaurant.getRestaurantPhoneNumber());
-            System.out.println(restaurant.getDeliveryInfoTime());
-            System.out.println(restaurant.getDeliveryInfoAdditionalCharges());
             restaurantUpdate.getDeliveryInfo().setDeliveryInfoTime(restaurant.getDeliveryInfoTime());
             restaurantUpdate.getDeliveryInfo().setDeliveryInfoAdditionalCharges(restaurant.getDeliveryInfoAdditionalCharges());
             restaurantUpdate.getDeliveryInfo().setDeliveryInfoUpdated(dateTimeNow());
             restaurantRepository.save(restaurantUpdate);
         });
         return modelMapper.map(restaurantDb, RestaurantDTO.class);
-    }
-
-    public RestaurantCreationDTO restaurantUpdateCreation(Long id) {
-        var restaurantDb = restaurantRepository.findById(id);
-        if(restaurantDb.isEmpty()){
-            return null;
-        }
-        return modelMapper.map(restaurantDb.get(), RestaurantCreationDTO.class);
     }
 }
