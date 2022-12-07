@@ -21,19 +21,6 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
-    // ALL RESTAURANTS
-    @GetMapping("/restaurants")
-    public String restaurants(Model model) {
-        var restaurants = restaurantService.findAll();
-        model.addAttribute("restaurants", restaurants);
-        return "restaurants";
-    }
-
-    @GetMapping("/restaurants/restaurant-details/{id}")
-    public String restaurantDetails(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("restaurant", restaurantService.restaurantDetails(id));
-        return "restaurant-details";
-    }
 
     @GetMapping("/restaurants/add")
     public String addNewRestaurant(Model model) {
@@ -47,24 +34,35 @@ public class RestaurantController {
             return "add-restaurant";
         }
         restaurantService.createRestaurant(restaurant);
-        return "redirect:/restaurant-details/";
+        return "redirect:/restaurants/";
+    }
+
+    @GetMapping("/restaurants")
+    public String restaurants(Model model) {
+        var restaurants = restaurantService.findAll();
+        model.addAttribute("restaurants", restaurants);
+        return "restaurants";
+    }
+
+    @GetMapping("/restaurants/restaurant-details/{id}")
+    public String restaurantDetails(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("restaurant", restaurantService.restaurantDetails(id));
+        return "restaurant-details";
     }
 
     @GetMapping("/restaurants/edit/{id}")
-    public String editRestaurant(@PathVariable("id") Long id, Model model) {
-        //mapirati na restaurantcreationdto
+    public String editRestaurant(@PathVariable("id") Long id, Model model){
         model.addAttribute("restaurant", restaurantService.restaurantDetails(id));
         return "update-restaurant";
     }
 
     @PostMapping("/restaurants/update/{id}")
-    //fixit
-    public String updateRestaurant(@PathVariable("id") Long id, @Valid @ModelAttribute("restaurant") RestaurantCreationDTO restaurant, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
+    public String updateRestaurant(@PathVariable("id") Long id, @Valid @ModelAttribute("restaurant") RestaurantCreationDTO restaurant, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
             return "update-restaurant";
         }
         restaurantService.updateRestaurant(id, restaurant);
-        return "redirect:/restaurants/restaurant-details/{id}/";
+        return "redirect:/restaurants/restaurant-details/{id}";
     }
 
     @GetMapping("/restaurants/delete/{id}")
@@ -72,6 +70,4 @@ public class RestaurantController {
         restaurantService.deleteRestaurant(id);
         return "redirect:/restaurants/";
     }
-
-
 }

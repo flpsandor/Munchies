@@ -69,6 +69,17 @@ public class RestaurantService {
 
     public RestaurantDTO updateRestaurant(Long id, RestaurantCreationDTO restaurant) {
         var restaurantDb = restaurantRepository.findById(id);
-        return null;
+        restaurantDb.ifPresent(value -> {
+            var restaurantUpdate = restaurantDb.get();
+            restaurantUpdate.setRestaurantUpdated(dateTimeNow());
+            restaurantUpdate.setRestaurantName(restaurant.getRestaurantName());
+            restaurantUpdate.setRestaurantAddress(restaurant.getRestaurantAddress());
+            restaurantUpdate.setRestaurantShortName(setShortName(restaurant.getRestaurantName()));
+            restaurantUpdate.setRestaurantPhoneNumber(restaurant.getRestaurantPhoneNumber());
+            restaurantUpdate.getDeliveryInfo().setDeliveryInfoTime(restaurant.getDeliveryInfoTime());
+            restaurantUpdate.getDeliveryInfo().setDeliveryInfoAdditionalCharges(restaurant.getDeliveryInfoAdditionalCharges());
+            restaurantRepository.save(restaurantUpdate);
+        });
+        return modelMapper.map(restaurantDb, RestaurantDTO.class);
     }
 }
