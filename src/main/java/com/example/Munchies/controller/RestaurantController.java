@@ -1,7 +1,6 @@
 package com.example.Munchies.controller;
 
-import com.example.Munchies.model.dto.DeliveryInfoDTO;
-import com.example.Munchies.model.dto.RestaurantDTO;
+import com.example.Munchies.model.dto.RestaurantCreationDTO;
 import com.example.Munchies.service.RestaurantService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +21,22 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
+
+    @GetMapping("/restaurants/add")
+    public String addNewRestaurant(Model model) {
+        model.addAttribute("restaurant", new RestaurantCreationDTO());
+        return "add-restaurant";
+    }
+
+    @PostMapping("/restaurants/save")
+    public String saveRestaurant( @ModelAttribute("restaurant") @Valid RestaurantCreationDTO restaurant, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "add-restaurant";
+        }
+        restaurantService.createRestaurant(restaurant);
+        return "redirect:/restaurants/";
+    }
+
     @GetMapping("/restaurants")
     public String restaurants(Model model) {
         var restaurants = restaurantService.findAll();
@@ -31,46 +46,29 @@ public class RestaurantController {
 
     @GetMapping("/restaurants/restaurant-details/{id}")
     public String restaurantDetails(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("restaurant", restaurantService.createRestaurantDtoById(id));
-        model.addAttribute("deliveryinfo", restaurantService.createDeliveryDtoFromRestaurantId(id));
+        model.addAttribute("restaurant", restaurantService.restaurantDetails(id));
         return "restaurant-details";
     }
 
-    @GetMapping("/restaurants/add")
-    public String addNewRestaurant(Model model) {
-        model.addAttribute("restaurant", new RestaurantDTO());
-        model.addAttribute("deliveryinfo", new DeliveryInfoDTO());
-        return "add-restaurant";
-    }
-
-    @PostMapping("/restaurants/save")
-    public String saveRestaurant(@ModelAttribute("deliveryinfo") @Valid DeliveryInfoDTO deliveryInfo, BindingResult result1, @ModelAttribute("restaurant") @Valid RestaurantDTO restaurant, BindingResult result2) {
-        if (result1.hasErrors() || result2.hasErrors()) {
-            return "add-restaurant";
-        }
-        restaurantService.save(restaurant, deliveryInfo);
-        return "redirect:/restaurants/";
-    }
-
     @GetMapping("/restaurants/edit/{id}")
-    public String editRestaurant(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("restaurant", restaurantService.createRestaurantDtoById(id));
-        model.addAttribute("deliveryinfo", restaurantService.createDeliveryDtoFromRestaurantId(id));
+    public String editRestaurant(@PathVariable("id") Long id, Model model){
+        model.addAttribute("id", id);
+        model.addAttribute("restaurant", restaurantService.restaurantUpdateCreation(id));
         return "update-restaurant";
     }
 
     @PostMapping("/restaurants/update/{id}")
-    public String updateRestaurant(@PathVariable("id") Long id, @Valid @ModelAttribute("restaurant") RestaurantDTO restaurant, BindingResult result1, @Valid @ModelAttribute("deliveryinfo") DeliveryInfoDTO deliveryInfo, BindingResult result2) {
-        if (result1.hasErrors() || result2.hasErrors()){
+    public String updateRestaurant(@PathVariable("id") Long id, @Valid @ModelAttribute("restaurant") RestaurantCreationDTO restaurant, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
             return "update-restaurant";
         }
-        restaurantService.updateRestaurant(id, restaurant, deliveryInfo);
-        return "redirect:/restaurants/restaurant-details/{id}/";
+        restaurantService.updateRestaurant(id, restaurant);
+        return "redirect:/restaurants/restaurant-details/{id}";
     }
 
     @GetMapping("/restaurants/delete/{id}")
     public String deleteRestaurant(@PathVariable Long id) {
-        restaurantService.delete(id);
+        restaurantService.deleteRestaurant(id);
         return "redirect:/restaurants/";
     }
 }

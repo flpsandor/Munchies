@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Table(name="delivery_info")
 public class DeliveryInfo {
     @Id
@@ -26,7 +25,7 @@ public class DeliveryInfo {
     @Column(name="delivery_info_updated")
     private LocalDateTime deliveryInfoUpdated;
 
-    @OneToOne (cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="delivery_info_restaurant_id", referencedColumnName = "restaurant_id")
     private Restaurant restaurant;
 }

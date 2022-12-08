@@ -28,9 +28,9 @@
 </div>
 <div class="container">
     <div class="row">
-        <h2>Add restaurant</h2>
+        <h2>Update restaurant</h2>
     </div>
-    <form method="post" th:action="@{/restaurants/update/{id}(id=${restaurant.restaurantId})}">
+    <form method="post" th:action="@{/restaurants/update/{id}(id=${id})}">
         <div class="form-group">
             <label for="restaurantName">Restaurant name</label>
             <input class="form-control" id="restaurantName" placeholder="Enter restaurant name" th:field="*{restaurant.restaurantName}"
@@ -64,21 +64,19 @@
             </ul>
         </div>
         <div class="form-group">
-            <label for="deliveryTime">Delivery time</label>
-            <input class="form-control" id="deliveryTime" placeholder="Enter restaurant delivery time"
-                   th:field="*{deliveryinfo.deliveryInfoTime}" type="text">
+            <label for="deliverytime">Delivery time</label>
+            <input class="form-control" id="deliverytime" th:field="*{restaurant.deliveryInfoTime}" type="text">
+            <ul class="text-warning list-unstyled">
+                <li th:each="err : ${#fields.errors('restaurant.deliveryInfoTime')}" th:text="${err}" class="error small"></li>
+            </ul>
         </div>
-        <ul class="text-warning list-unstyled">
-            <li th:each="err : ${#fields.errors('deliveryinfo.deliveryInfoTime')}" th:text="${err}" class="error small" ></li>
-        </ul>
         <div class="form-group">
-            <label for="deliveryCharges">Delivery charges</label>
-            <input class="form-control" id="deliveryCharges"
-                   placeholder="Enter restaurant delivery charges" th:field="*{deliveryinfo.deliveryInfoAdditionalCharges}" type="text">
+            <label for="deliveryinfocharges">Delivery charges</label>
+            <input class="form-control" id="deliveryinfocharges"  th:field="*{restaurant.deliveryInfoAdditionalCharges}" type="text">
+            <ul class="text-warning list-unstyled">
+                <li th:each="err : ${#fields.errors('restaurant.deliveryInfoAdditionalCharges')}" th:text="${err}" class="error small" ></li>
+            </ul>
         </div>
-        <ul class="text-warning list-unstyled">
-            <li th:each="err : ${#fields.errors('deliveryinfo.deliveryInfoAdditionalCharges')}" th:text="${err}" class="error small"></li>
-        </ul>
         <button class="btn btn-primary margin-top" type="submit">Submit</button>
     </form>
 

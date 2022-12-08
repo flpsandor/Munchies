@@ -52,17 +52,4 @@ CREATE TABLE `group_order`
     `group_order_updated`       datetime
 );
 
-ALTER TABLE `delivery_info`
-    ADD FOREIGN KEY (`delivery_info_restaurant_id`) REFERENCES `restaurant` (`restaurant_id`);
 
-ALTER TABLE `order_item`
-    ADD FOREIGN KEY (`order_item_group_order_id`) REFERENCES `group_order` (`group_order_id`);
-
-ALTER TABLE `order_item`
-    ADD FOREIGN KEY (`order_item_employee_id`) REFERENCES `employee` (`employee_id`);
-
-ALTER TABLE `group_order`
-    ADD FOREIGN KEY (`group_order_restaurant_id`) REFERENCES `restaurant` (`restaurant_id`);
-
-ALTER TABLE `group_order`
-    ADD FOREIGN KEY (`group_order_employee_id`) REFERENCES `employee` (`employee_id`);
