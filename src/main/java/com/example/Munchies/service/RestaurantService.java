@@ -29,10 +29,6 @@ public class RestaurantService {
         return name.replaceAll("\\s+", "_").toLowerCase();
     }
 
-    public LocalDateTime dateTimeNow() {
-        return LocalDateTime.now();
-    }
-
     public List<RestaurantDTO> findAll() {
         // fix latter
         ArrayList<RestaurantDTO> restaurants = new ArrayList<>();
@@ -45,7 +41,7 @@ public class RestaurantService {
     public RestaurantDTO createRestaurant(RestaurantCreationDTO restaurant) {
         var restaurantSave = modelMapper.map(restaurant, Restaurant.class);
         restaurantSave.setRestaurantShortName(setShortName(restaurant.getRestaurantName()));
-        restaurantSave.setRestaurantCreated(dateTimeNow());
+        restaurantSave.setRestaurantCreated(LocalDateTime.now());
         restaurantSave.setDeliveryInfo();
         restaurantRepository.save(restaurantSave);
         return modelMapper.map(restaurantSave, RestaurantDTO.class);
@@ -79,14 +75,14 @@ public class RestaurantService {
         var restaurantDb = restaurantRepository.findById(id);
         restaurantDb.ifPresent(value -> {
             var restaurantUpdate = restaurantDb.get();
-            restaurantUpdate.setRestaurantUpdated(dateTimeNow());
+            restaurantUpdate.setRestaurantUpdated(LocalDateTime.now());
             restaurantUpdate.setRestaurantName(restaurant.getRestaurantName());
             restaurantUpdate.setRestaurantAddress(restaurant.getRestaurantAddress());
             restaurantUpdate.setRestaurantShortName(setShortName(restaurant.getRestaurantName()));
             restaurantUpdate.setRestaurantPhoneNumber(restaurant.getRestaurantPhoneNumber());
             restaurantUpdate.getDeliveryInfo().setDeliveryInfoTime(restaurant.getDeliveryInfoTime());
             restaurantUpdate.getDeliveryInfo().setDeliveryInfoAdditionalCharges(restaurant.getDeliveryInfoAdditionalCharges());
-            restaurantUpdate.getDeliveryInfo().setDeliveryInfoUpdated(dateTimeNow());
+            restaurantUpdate.getDeliveryInfo().setDeliveryInfoUpdated(LocalDateTime.now());
             restaurantRepository.save(restaurantUpdate);
         });
         return modelMapper.map(restaurantDb, RestaurantDTO.class);
