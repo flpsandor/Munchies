@@ -30,8 +30,7 @@ public class RestaurantService {
     }
 
     public List<RestaurantDTO> findAll() {
-        // fix latter
-        ArrayList<RestaurantDTO> restaurants = new ArrayList<>();
+        List<RestaurantDTO> restaurants = new ArrayList<>();
         for (var restaurant : restaurantRepository.findAll()) {
             restaurants.add(modelMapper.map(restaurant, RestaurantDTO.class));
         }

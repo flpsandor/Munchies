@@ -3,6 +3,7 @@ package com.example.Munchies.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,12 +21,13 @@ public class GroupOrder {
     private LocalDateTime groupOrderCreated;
     @Column(name="group_order_updated")
     private LocalDateTime groupOrderUpdated;
-
-    @ManyToOne
-    @JoinColumn(name = "group_order_employee_id", referencedColumnName = "employee_id")
-    private Employee employee;
+    @Column(name="group_order_employee_id")
+    private String employee;
 
     @ManyToOne
     @JoinColumn(name = "group_order_restaurant_id", referencedColumnName = "restaurant_id")
     private Restaurant restaurant;
+
+    @OneToMany
+    private List<OrderItem> orderItemList;
 }
