@@ -45,14 +45,30 @@ public class OrderService {
 
     public GroupOrderDTO createGroupOrder(GroupOrderCreationDTO groupOrder) {
         var groupOrderSave = modelMapper.map(groupOrder, GroupOrder.class);
+        var timeout = groupOrderSave.getGroupOrderTimeout();
+        if(timeout == null || timeout==0)
+            groupOrderSave.setGroupOrderTimeout(10);
         groupOrderSave.setGroupOrderCreated(LocalDateTime.now());
         groupOrderRepository.save(groupOrderSave);
         return modelMapper.map(groupOrderSave, GroupOrderDTO.class);
     }
 
     public OrderItemDTO createOrderItem(Long id, OrderItemCreationDTO orderItem) {
+        var groupOrder = groupOrderRepository.findById(id);
         var orderItemSave = modelMapper.map(orderItem, OrderItem.class);
+        orderItemSave.setGroupOrder(groupOrder.get());
+        orderItemSave.setOrderItemCreated(LocalDateTime.now());
+        orderItemRepository.save(orderItemSave);
 
         return modelMapper.map(orderItemSave, OrderItemDTO.class);
+    }
+
+    public List<OrderItemDTO> findAllByGroupId(Long id, OrderItemDTO orderItem) {
+        List<OrderItemDTO> orderItems = new ArrayList<>();
+        var groupOrder = groupOrderRepository.findById(id);
+        for (var order : orderItemRepository.findAllByGroupOrder(groupOrder.get())){
+            orderItems.add(modelMapper.map(order, OrderItemDTO.class));
+        }
+        return orderItems;
     }
 }

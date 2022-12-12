@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class GroupOrderDTO {
     private Long groupOrderId;
-    private String employee;
+    private String groupOrderEmployee;
     private Restaurant restaurant;
+    private Integer groupOrderTimeout;
     private LocalDateTime groupOrderCreated;
 }

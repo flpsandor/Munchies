@@ -18,18 +18,14 @@ public class OrderItem {
     private Long orderItemId;
     @Column(name="order_item_description")
     private String orderItemDescription;
-    @Column(name="order_item_quantity")
-    private Integer orderItemQuantity;
     @Column(name="order_item_price")
     private Double orderItemPrice;
     @Column(name="order_item_created")
     private LocalDateTime orderItemCreated;
     @Column(name="order_item_updated")
     private LocalDateTime orderItemUpdated;
-
-    @ManyToOne
-    @JoinColumn(name = "order_item_employee_id", referencedColumnName = "employee_id")
-    private Employee employee;
+    @Column(name="order_item_employee_id")
+    private String orderItemEmployee;
 
     @ManyToOne
     @JoinColumn(name="order_item_group_order_id", referencedColumnName = "group_order_id")

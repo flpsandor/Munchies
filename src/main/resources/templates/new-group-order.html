@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet">
-    <title>Munchies | Add restaurant</title>
+    <title>Munchies | New group order</title>
 </head>
 <body>
 <div class="container">
@@ -36,7 +36,7 @@
     <form method="post" th:action="@{/orders/save}">
         <div class="form-group">
             <label for="employee">Employee name</label>
-            <input class="form-control" id="employee" placeholder="Enter your name" th:field="*{grouporder.employee}"/>
+            <input class="form-control" id="employee" placeholder="Enter your name" th:field="*{grouporder.groupOrderEmployee}" type="text"/>
         </div>
         <div class="form-group">
             <label for="restaurant">Restaurant name</label>
@@ -44,6 +44,10 @@
                 <option value="0">Select restaurant</option>
                 <option th:each="restaurant: ${restaurants}" th:value="${restaurant.restaurantId}"  th:text="*{restaurant.restaurantName}"></option>
             </select>
+        </div>
+        <div class="form-group">
+            <label for="timeout">Group order timeout</label>
+            <input class="form-control" type="number" id="timeout" placeholder="Enter timeout for group order (default 10)" th:field="*{grouporder.groupOrderTimeout}"/>
         </div>
         <button class="btn btn-primary margin-top" type="submit">Submit</button>
     </form>
