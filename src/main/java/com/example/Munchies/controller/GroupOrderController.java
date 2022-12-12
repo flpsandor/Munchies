@@ -54,7 +54,7 @@ public class GroupOrderController {
     }
 
     @GetMapping("/orders/group-order-items/{id}")
-    public String allItemsInOrder(@PathVariable("id") Long id, Model model) {
+    public String findItemsInOrder(@PathVariable("id") Long id, Model model) {
         model.addAttribute("orderitems", orderService.findAllByGroupId(id));
         model.addAttribute("grouporder", orderService.findById(id));
         return "group-order-details";

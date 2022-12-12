@@ -1,6 +1,5 @@
 package com.example.Munchies.repository;
 
-import com.example.Munchies.model.dto.OrderItemDTO;
 import com.example.Munchies.model.entity.GroupOrder;
 import com.example.Munchies.model.entity.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;

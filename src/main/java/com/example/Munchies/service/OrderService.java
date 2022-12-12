@@ -35,7 +35,6 @@ public class OrderService {
             if(order.getGroupOrderCreated().plusMinutes(order.getGroupOrderTimeout()).isBefore(LocalDateTime.now())){
                 order.setGroupOrderValid(Boolean.FALSE);
             }
-            // prebaciti u sql
             if((LocalDate.now().atStartOfDay()).isBefore(order.getGroupOrderCreated())){
                 groupOrders.add(modelMapper.map(order, GroupOrderDTO.class));
             }
