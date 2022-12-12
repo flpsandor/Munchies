@@ -11,7 +11,7 @@
 <div class="container">
     <nav class="navbar navbar-expand-lg">
         <h1>Munchies</h1>
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/}">Home</a>
@@ -30,45 +30,91 @@
     </nav>
 </div>
 <div class="container">
-    <div class="container" th:each="grouporder: ${grouporders}">
-        <div class="row">
-            <div class="col-6">
-                <h4 th:text="${grouporder.groupOrderEmployee}">Group order initial by: </h4>
-            </div>
-            <div class="col-3">
-                <p th:text="${grouporder.groupOrderCreated}">Group order created: </p>
-            </div>
-            <div class="col-3">
-                <p th:text="${grouporder.groupOrderTimeout}">Group order valid: </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <p th:text="${grouporder.restaurant.getRestaurantName()}">Restaurant name:</p>
-            </div>
-            <div class="col-4">
-                <p th:text="${grouporder.restaurant.getRestaurantPhoneNumber()}">Restaurant phone number:</p>
-            </div>
-            <div class="col-4">
-                <p th:text="${grouporder.restaurant.getRestaurantMenuUrl()}">Restaurant menu url: </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-8">
-                <p>Actions</p>
-            </div>
-            <div class="col-4">
-                <div class="btn-group">
-                    <a th:href="@{'/orders/order-item/add/'+${grouporder.groupOrderId}}"
-                       class="btn btn-success btn-sm">Add item in order</a>
-                    <a th:href="@{'/orders/group-order-items/'+${grouporder.groupOrderId}}"
-                       class="btn btn-info btn-sm">View all order items in group order</a>
-                </div>
-            </div>
-        </div>
-        <hr/>
+    <div class="container w-90 border rounded" id="order" style="margin: 20px; padding:10px; background-color: #F7FCFD;"
+         th:each="grouporder: ${grouporders}">
+        <th:block th:switch="${grouporder.groupOrderValid}">
+            <table th:case="true" class="table table-sm table-borderless">
+                <thead>
+                <tr>
+                    <th scope="col">Actions</th>
+                    <td>
+                        <div class="btn-group float-end">
+                            <a th:href="@{'/orders/order-item/add/'+${grouporder.groupOrderId}}"
+                               class="btn btn-success btn-sm">Add item in order</a>
+                            <a th:href="@{'/orders/group-order-items/'+${grouporder.groupOrderId}}"
+                               class="btn btn-info btn-sm">View all order items in group order</a>
+                        </div>
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Order initialized by:</td>
+                    <td th:text="*{grouporder.groupOrderEmployee}"></td>
+                </tr>
+                <tr>
+                    <td>Order valid from:</td>
+                    <td th:text="*{grouporder.groupOrderCreated}"></td>
+                </tr>
+                <tr>
+                    <td>Order valid:</td>
+                    <td th:text="*{grouporder.groupOrderTimeout+' minutes'}"></td>
+                </tr>
+                <tr>
+                    <td>Restaurant name:</td>
+                    <td th:text="*{grouporder.getRestaurant().getRestaurantName()}"></td>
+                </tr>
+                <tr>
+                    <td>Restaurant phone number:</td>
+                    <td th:text="*{grouporder.getRestaurant().getRestaurantPhoneNumber()}"></td>
+                </tr>
+                <tr>
+                    <td>Restaurant menu URL</td>
+                    <td th:text="*{grouporder.getRestaurant().getRestaurantMenuUrl()}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <table th:case="false" class="table table-sm table-borderless">
+                <thead>
+                <tr>
+                    <th scope="col">Actions</th>
+                    <td>
+                        <div class="btn-group float-end">
+                            <a th:href="@{'/orders/group-order-items/'+${grouporder.groupOrderId}}"
+                               class="btn btn-info btn-sm">View all order items in group order</a>
+                        </div>
+                    </td>
+                </tr>
+                </thead>
+                <tbody style="opacity: 50%">
+                <tr>
+                    <td>Order initialized by:</td>
+                    <td th:text="*{grouporder.groupOrderEmployee}"></td>
+                </tr>
+                <tr>
+                    <td>Order valid from:</td>
+                    <td th:text="*{grouporder.groupOrderCreated}"></td>
+                </tr>
+                <tr>
+                    <td>Order valid:</td>
+                    <td th:text="*{grouporder.groupOrderTimeout+' minutes'}"></td>
+                </tr>
+                <tr>
+                    <td>Restaurant name:</td>
+                    <td th:text="*{grouporder.getRestaurant().getRestaurantName()}"></td>
+                </tr>
+                <tr>
+                    <td>Restaurant phone number:</td>
+                    <td th:text="*{grouporder.getRestaurant().getRestaurantPhoneNumber()}"></td>
+                </tr>
+                <tr>
+                    <td>Restaurant menu URL</td>
+                    <td th:text="*{grouporder.getRestaurant().getRestaurantMenuUrl()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
     </div>
-
 </div>
 </body>
 </html>

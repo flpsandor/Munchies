@@ -19,6 +19,10 @@ public class GroupOrder {
     private Long groupOrderId;
     @Column(name="group_order_timeout")
     private Integer groupOrderTimeout;
+    @Column(name="group_order_valid")
+    private Boolean groupOrderValid;
+    @Column(name="group_order_total_price")
+    private Double groupOrderTotalPrice;
     @Column(name="group_order_created")
     private LocalDateTime groupOrderCreated;
     @Column(name="group_order_updated")

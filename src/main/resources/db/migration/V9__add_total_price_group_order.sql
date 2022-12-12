@@ -1,0 +1,2 @@
+ALTER TABLE munchies.group_order
+ADD COLUMN group_order_total_price double AFTER group_order_timeout;

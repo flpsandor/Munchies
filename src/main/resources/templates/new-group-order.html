@@ -23,7 +23,7 @@
                     <a class="nav-link" th:href="@{/restaurants/add}">Add restaurants</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/orders/add}">Create group order</a>
+                    <a class="nav-link" th:href="@{/orders/add}">Create new group order</a>
                 </li>
             </ul>
         </div>
@@ -37,6 +37,9 @@
         <div class="form-group">
             <label for="employee">Employee name</label>
             <input class="form-control" id="employee" placeholder="Enter your name" th:field="*{grouporder.groupOrderEmployee}" type="text"/>
+            <ul class="text-warning list-unstyled">
+                <li th:each="err: ${#fields.errors('grouporder.groupOrderEmployee')}" th:text="${err}" class="error small"></li>
+            </ul>
         </div>
         <div class="form-group">
             <label for="restaurant">Restaurant name</label>
@@ -44,10 +47,16 @@
                 <option value="0">Select restaurant</option>
                 <option th:each="restaurant: ${restaurants}" th:value="${restaurant.restaurantId}"  th:text="*{restaurant.restaurantName}"></option>
             </select>
+            <ul class="text-warning list-unstyled">
+                <li th:each="err: ${#fields.errors('grouporder.restaurant')}" th:text="${err}" class="error small"></li>
+            </ul>
         </div>
         <div class="form-group">
             <label for="timeout">Group order timeout</label>
             <input class="form-control" type="number" id="timeout" placeholder="Enter timeout for group order (default 10)" th:field="*{grouporder.groupOrderTimeout}"/>
+            <ul class="text-warning list-unstyled">
+                <li th:each="err: ${#fields.errors('grouporder.groupOrderTimeout')}" th:text="${err}" class="error small"></li>
+            </ul>
         </div>
         <button class="btn btn-primary margin-top" type="submit">Submit</button>
     </form>

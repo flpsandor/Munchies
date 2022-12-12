@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -19,5 +20,7 @@ public class GroupOrderCreationDTO {
     private String groupOrderEmployee;
     @NotNull (message = "This field is required")
     private Restaurant restaurant;
+    @Min(value = 10, message = "Minimal timeout for group order is 10 minutes")
     private Integer groupOrderTimeout;
+    private Boolean groupOrderValid = true;
 }

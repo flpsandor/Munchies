@@ -6,15 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItemCreationDTO {
+    @NotNull(message = "This field is required")
+    @Size(min = 3, message = "Minimal size of employee name is three character")
     private String orderItemEmployee;
+    @NotNull(message="This field is required")
+    @Size(min=5, max=1000, message = "Minimal character number is five, maximum is thousand")
     private String orderItemDescription;
+    @NotNull(message="This field is required")
     private Double orderItemPrice;
+    @NotNull(message = "This field is required")
     private GroupOrder groupOrder;
 }

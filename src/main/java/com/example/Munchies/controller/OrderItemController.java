@@ -1,13 +1,16 @@
 package com.example.Munchies.controller;
 
 import com.example.Munchies.model.dto.OrderItemCreationDTO;
-import com.example.Munchies.model.dto.OrderItemDTO;
 import com.example.Munchies.service.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
 
 @Controller
 public class OrderItemController {
@@ -26,15 +29,11 @@ public class OrderItemController {
     }
 
     @PostMapping("/orders/order-item/save/{id}")
-    public String saveItemInOrder(@PathVariable("id") Long id, OrderItemCreationDTO orderItem) {
+    public String saveItemInOrder(@PathVariable("id") Long id, @ModelAttribute("orderitem") @Valid OrderItemCreationDTO orderItem, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "add-item";
+        }
         orderService.createOrderItem(id, orderItem);
-        // redirect to details with update, delete, confirm
-        return "redirect:/";
-    }
-
-    @GetMapping("/orders/group-order-items/{id}")
-    public String allItemsInOrder(@PathVariable("id") Long id, OrderItemDTO orderItem, Model model) {
-        model.addAttribute("orderitems", orderService.findAllByGroupId(id, orderItem));
-        return "group-order-details";
+        return "redirect:/orders/order-item/";
     }
 }

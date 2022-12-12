@@ -16,7 +16,9 @@ import java.time.LocalDateTime;
 public class GroupOrderDTO {
     private Long groupOrderId;
     private String groupOrderEmployee;
+    private Double groupOrderTotalPrice;
     private Restaurant restaurant;
     private Integer groupOrderTimeout;
     private LocalDateTime groupOrderCreated;
+    private Boolean groupOrderValid;
 }
