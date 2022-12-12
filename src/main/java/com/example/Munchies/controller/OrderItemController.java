@@ -34,6 +34,6 @@ public class OrderItemController {
             return "add-item";
         }
         orderService.createOrderItem(id, orderItem);
-        return "redirect:/orders/order-item/";
+        return "redirect:/orders/group-order-items/{id}";
     }
 }

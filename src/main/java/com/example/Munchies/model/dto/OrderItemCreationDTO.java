@@ -22,6 +22,5 @@ public class OrderItemCreationDTO {
     private String orderItemDescription;
     @NotNull(message="This field is required")
     private Double orderItemPrice;
-    @NotNull(message = "This field is required")
     private GroupOrder groupOrder;
 }
