@@ -11,8 +11,8 @@
 <body>
 <div class="container"
      style="height: 300px; width: 300px; position: absolute; top: 50%; left:50%; margin: -150px 0 0 -150px">
-    <div class="row">
-        <h2>Munchies</h2>
+    <div class="row float-center">
+        <a class="h2 text-decoration-none text-primary" th:href="@{/}"><h2>Munchies</h2></a>
         <form method="post" th:action="@{/login}">
             <div class="form-group">
                 <label for="username">Email</label>
@@ -24,7 +24,7 @@
                 <input class="form-control" id="password" name="password" placeholder="Enter password"
                        type="password">
             </div>
-            <button class="btn btn-primary margin-top" type="submit">Login</button>
+            <button class="btn btn-primary" style="margin-top: 20px; " type="submit">Login</button>
         </form>
     </div>
 </div>
