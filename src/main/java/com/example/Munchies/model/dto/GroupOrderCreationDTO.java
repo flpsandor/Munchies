@@ -22,5 +22,5 @@ public class GroupOrderCreationDTO {
     private Restaurant restaurant;
     @Min(value = 10, message = "Minimal timeout for group order is 10 minutes")
     private Integer groupOrderTimeout;
-    private Boolean groupOrderValid = true;
+    private Boolean groupOrderValid;
 }

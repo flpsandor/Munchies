@@ -8,11 +8,11 @@ import com.example.Munchies.model.entity.GroupOrder;
 import com.example.Munchies.model.entity.OrderItem;
 import com.example.Munchies.repository.GroupOrderRepository;
 import com.example.Munchies.repository.OrderItemRepository;
+import com.example.Munchies.repository.RestaurantRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,30 +22,33 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final GroupOrderRepository groupOrderRepository;
     private final ModelMapper modelMapper;
+    private final RestaurantRepository restaurantRepository;
 
-    public OrderService(OrderItemRepository orderItemRepository, GroupOrderRepository groupOrderRepository, ModelMapper modelMapper) {
+    public OrderService(OrderItemRepository orderItemRepository, GroupOrderRepository groupOrderRepository, ModelMapper modelMapper,
+                        RestaurantRepository restaurantRepository) {
         this.orderItemRepository = orderItemRepository;
         this.groupOrderRepository = groupOrderRepository;
         this.modelMapper = modelMapper;
+        this.restaurantRepository = restaurantRepository;
+    }
+
+    private Boolean checkIfGroupOrderIsValid(GroupOrder groupOrder){
+        if(groupOrder.getGroupOrderCreated().plusMinutes(groupOrder.getGroupOrderTimeout()).isBefore(LocalDateTime.now())){
+            groupOrder.setGroupOrderValid(Boolean.FALSE);
+            groupOrderRepository.save(groupOrder);
+            return false;
+        }
+        return true;
     }
 
     public List<GroupOrderDTO> findAll() {
         List<GroupOrderDTO> groupOrders = new ArrayList<>();
         for (var order : groupOrderRepository.findAll(Sort.by(Sort.Direction.DESC, "groupOrderId"))) {
-            if(order.getGroupOrderCreated().plusMinutes(order.getGroupOrderTimeout()).isBefore(LocalDateTime.now())){
-                order.setGroupOrderValid(Boolean.FALSE);
-                groupOrderRepository.save(order);
-            }
-            if((LocalDate.now().atStartOfDay()).isBefore(order.getGroupOrderCreated())){
+            if(checkIfGroupOrderIsValid(order)){
                 groupOrders.add(modelMapper.map(order, GroupOrderDTO.class));
             }
         }
         return groupOrders;
-    }
-
-    public void deleteGroupOrder(Long id) {
-        var groupOrderDb = groupOrderRepository.findById(id);
-        groupOrderDb.ifPresent(groupOrderRepository::delete);
     }
 
     public GroupOrderDTO createGroupOrder(GroupOrderCreationDTO groupOrder) {
@@ -53,15 +56,19 @@ public class OrderService {
         var timeout = groupOrderSave.getGroupOrderTimeout();
         if(timeout == null || timeout==0)
             groupOrderSave.setGroupOrderTimeout(10);
+        groupOrderSave.setGroupOrderValid(Boolean.TRUE);
         groupOrderSave.setGroupOrderCreated(LocalDateTime.now());
         groupOrderRepository.save(groupOrderSave);
         return modelMapper.map(groupOrderSave, GroupOrderDTO.class);
     }
 
-    public OrderItemDTO createOrderItem(Long id, OrderItemCreationDTO orderItem) {
+    public OrderItemDTO createOrderItem(Long id, OrderItemCreationDTO orderItem) throws Exception {
         var groupOrder = groupOrderRepository.findById(id);
         if(groupOrder.isEmpty()){
             return null;
+        }
+        if(!checkIfGroupOrderIsValid(groupOrder.get())){
+            throw new Exception("Group order timeout");
         }
         var orderItemSave = modelMapper.map(orderItem, OrderItem.class);
         orderItemSave.setGroupOrder(groupOrder.get());
@@ -92,5 +99,21 @@ public class OrderService {
             return null;
         }
         return modelMapper.map(groupOrder.get(), GroupOrderDTO.class);
+    }
+
+    public GroupOrderDTO createGroupOrder(Long id, GroupOrderCreationDTO groupOrder) {
+        var groupOrderSave = modelMapper.map(groupOrder, GroupOrder.class);
+        var restaurant = restaurantRepository.findById(id);
+        if(restaurant.isEmpty()){
+            return null;
+        }
+        var timeout = groupOrderSave.getGroupOrderTimeout();
+        if(timeout == null || timeout==0)
+            groupOrderSave.setGroupOrderTimeout(10);
+        groupOrderSave.setGroupOrderValid(Boolean.TRUE);
+        groupOrderSave.setGroupOrderCreated(LocalDateTime.now());
+        groupOrderSave.setRestaurant(restaurant.get());
+        groupOrderRepository.save(groupOrderSave);
+        return modelMapper.map(groupOrderSave, GroupOrderDTO.class);
     }
 }

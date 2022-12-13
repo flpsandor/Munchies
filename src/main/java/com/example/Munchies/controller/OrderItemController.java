@@ -29,7 +29,7 @@ public class OrderItemController {
     }
 
     @PostMapping("/orders/order-item/save/{id}")
-    public String saveItemInOrder(@PathVariable("id") Long id, @ModelAttribute("orderitem") @Valid OrderItemCreationDTO orderItem, BindingResult bindingResult) {
+    public String saveItemInOrder(@PathVariable("id") Long id, @ModelAttribute("orderitem") @Valid OrderItemCreationDTO orderItem, BindingResult bindingResult) throws Exception {
         if(bindingResult.hasErrors()){
             return "add-item";
         }

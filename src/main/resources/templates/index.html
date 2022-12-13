@@ -9,62 +9,19 @@
     <title>Munchies | Home</title>
 </head>
 <body>
-<div class="container" th:insert="nav"></div>
-<div class="container">
-    <div class="container w-90 border rounded" id="order" style="margin: 20px; padding:10px;"
-         th:each="grouporder: ${grouporders}">
-
-        <table class="table table-sm table-borderless">
-            <thead>
-            <tr>
-                <th scope="col">Actions</th>
-                <td>
-                    <th:block th:switch="${grouporder.groupOrderValid}">
-                        <div class="btn-group float-end" th:case="true">
-                            <a th:href="@{'/orders/order-item/add/'+${grouporder.groupOrderId}}"
-                               class="btn btn-success btn-sm">Add item in order</a>
-                            <a th:href="@{'/orders/group-order-items/'+${grouporder.groupOrderId}}"
-                               class="btn btn-info btn-sm">View all order items in group order</a>
-                        </div>
-                        <div class="btn-group float-end" th:case="false">
-                            <a th:href="@{'/orders/group-order-items/'+${grouporder.groupOrderId}}"
-                               class="btn btn-info btn-sm">View all order items in group order</a>
-                        </div>
-                    </th:block>
-                </td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Order initialized by:</td>
-                <td th:text="*{grouporder.groupOrderEmployee}"></td>
-            </tr>
-            <tr>
-                <td>Order URL: </td>
-                <td th:text="'http://localhost:8080/orders/group-order-items/'+*{grouporder.groupOrderId}"></td>
-            </tr>
-            <tr>
-                <td>Order valid from:</td>
-                <td th:text="*{grouporder.groupOrderCreated}"></td>
-            </tr>
-            <tr>
-                <td>Order valid:</td>
-                <td th:text="*{grouporder.groupOrderTimeout+' minutes'}"></td>
-            </tr>
-            <tr>
-                <td>Restaurant name:</td>
-                <td th:text="*{grouporder.getRestaurant().getRestaurantName()}"></td>
-            </tr>
-            <tr>
-                <td>Restaurant phone number:</td>
-                <td th:text="*{grouporder.getRestaurant().getRestaurantPhoneNumber()}"></td>
-            </tr>
-            <tr>
-                <td>Restaurant menu URL</td>
-                <td th:text="*{grouporder.getRestaurant().getRestaurantMenuUrl()}"></td>
-            </tr>
-            </tbody>
-        </table>
+<div class="container" style="width:300px; margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);">
+    <div class="row">
+        <h1 class="display-1">Munchies</h1>
+    </div>
+    <div class="row">
+        <div class="btn-group">
+            <a class="btn btn-lg btn-light nav-link" th:href="@{/admin}">Admin portal</a>
+            <a class="btn btn-lg btn-light nav-link" th:href="@{/employee}">Employee portal</a>
+        </div>
     </div>
 </div>
 </body>

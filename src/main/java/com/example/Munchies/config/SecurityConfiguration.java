@@ -31,7 +31,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/restaurants/add/**", "/restaurants/edit/**", "/restaurants/delete/**")
+                .antMatchers("/admin","/restaurants/add/**", "/restaurants/edit/**", "/restaurants/delete/**")
                 .authenticated()
                 .and()
                 .formLogin()

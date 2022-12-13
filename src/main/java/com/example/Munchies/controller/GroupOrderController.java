@@ -24,13 +24,6 @@ public class GroupOrderController {
         this.restaurantService = restaurantService;
     }
 
-    @GetMapping("/")
-    public String home(Model model) {
-        var groupOrders = orderService.findAll();
-        model.addAttribute("grouporders", groupOrders);
-        return "index";
-    }
-
     @GetMapping("/orders/add")
     public String addNewGroupOrder(Model model) {
         model.addAttribute("grouporder", new GroupOrderCreationDTO());
@@ -38,19 +31,29 @@ public class GroupOrderController {
         return "new-group-order";
     }
 
-    @PostMapping("/orders/save")
-    public String saveGroupOrder(@Valid @ModelAttribute("grouporder") GroupOrderCreationDTO groupOrder, BindingResult bindingResult) {
+    @GetMapping("/orders/add/restaurant/{id}")
+    public String addNewGroupOrderWithRestaurantId(@PathVariable("id") Long id, Model model){
+        model.addAttribute("id", id);
+        model.addAttribute("grouporder", new GroupOrderCreationDTO());
+        return "new-group-order-with-restaurant";
+    }
+
+    @PostMapping("/orders/save/restaurant/{id}")
+    public String saveGroupOrderWithRestaurant(@ModelAttribute("id") Long id, @ModelAttribute("grouporder") GroupOrderCreationDTO groupOrder, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
             return "new-group-order";
         }
-        orderService.createGroupOrder(groupOrder);
-        return "redirect:/";
+        model.addAttribute("grouporder", orderService.createGroupOrder(id, groupOrder));
+        return "group-order-details";
     }
 
-    @GetMapping("/orders/delete/{id}")
-    public String deleteGroupOrder(@PathVariable Long id) {
-        orderService.deleteGroupOrder(id);
-        return "redirect:/";
+    @PostMapping("/orders/save")
+    public String saveGroupOrder(@Valid @ModelAttribute("grouporder") GroupOrderCreationDTO groupOrder, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()){
+            return "new-group-order";
+        }
+        model.addAttribute("grouporder", orderService.createGroupOrder(groupOrder));
+        return "group-order-details";
     }
 
     @GetMapping("/orders/group-order-items/{id}")

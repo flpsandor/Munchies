@@ -10,9 +10,9 @@
 </head>
 <body>
 <div class="container"
-     style="height: 300px; width: 300px; position: absolute; top: 50%; left:50%; margin: -150px 0 0 -150px">
+     style="width:350px; margin: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="row float-center">
-        <a class="h2 text-decoration-none text-primary" th:href="@{/}"><h2>Munchies</h2></a>
+        <a class="link-dark text-decoration-none" th:href="@{/}"><h2 class="display-1">Munchies</h2></a>
         <form method="post" th:action="@{/login}">
             <div class="form-group">
                 <label for="username">Email</label>

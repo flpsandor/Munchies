@@ -17,7 +17,6 @@ public class OrderItemCreationDTO {
     @NotNull(message = "This field is required")
     @Size(min = 3, message = "Minimal size of employee name is three character")
     private String orderItemEmployee;
-    @NotNull(message="This field is required")
     @Size(min=5, max=1000, message = "Minimal character number is five, maximum is thousand")
     private String orderItemDescription;
     @NotNull(message="This field is required")
