@@ -57,7 +57,9 @@
             <td th:text="${restaurant.restaurantShortName}"></td>
             <td colspan="2" th:text="${restaurant.restaurantAddress}"></td>
             <td th:text="${restaurant.restaurantPhoneNumber}"></td>
-            <td th:text="${restaurant.restaurantMenuUrl}"></td>
+            <td><a target="_blank" th:href="*{restaurant.restaurantMenuUrl}"
+                   th:text="*{restaurant.restaurantMenuUrl}"></a>
+            </td>
             <td>
                 <div class="btn-group">
                     <a th:href="@{'/restaurants/restaurant-details/'+${restaurant.restaurantId}}"

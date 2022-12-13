@@ -59,7 +59,7 @@
             </tr>
             <tr>
                 <td>Order URL:</td>
-                <td th:text="'http://localhost:8080/orders/group-order-items/'+*{grouporder.groupOrderId}"></td>
+                <td><a target="_blank" th:href="@{http://localhost:8080/orders/group-order-items/{id}(id=${grouporder.groupOrderId})}">Link</a></td>
             </tr>
             <tr>
                 <td>Order valid from:</td>
@@ -79,7 +79,7 @@
             </tr>
             <tr>
                 <td>Restaurant menu URL</td>
-                <td th:text="*{grouporder.getRestaurant().getRestaurantMenuUrl()}"></td>
+                <td><a target="_blank" th:href="*{grouporder.getRestaurant().getRestaurantMenuUrl()}" th:text="*{grouporder.getRestaurant().getRestaurantMenuUrl()}"></a></td>
             </tr>
             </tbody>
         </table>
