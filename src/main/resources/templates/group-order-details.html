@@ -20,6 +20,17 @@
         <table class="table table-striped table-product">
             <thead>
             <tr>
+                <th colspan="2">Action</th>
+                <td>
+                    <th:block th:switch="${grouporder.getGroupOrderValid().booleanValue()}">
+                        <div class="btn-group float-end" th:case="true">
+                            <a th:href="@{'/orders/order-item/add/'+${grouporder.groupOrderId}}"
+                               class="btn btn-success btn-sm">Add item in order</a>
+                        </div>
+                    </th:block>
+                </td>
+            </tr>
+            <tr>
                 <th scope="col">Employee name</th>
                 <th scope="col">Order description</th>
                 <th scope="col">Order price</th>

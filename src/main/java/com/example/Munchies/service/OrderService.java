@@ -34,6 +34,7 @@ public class OrderService {
         for (var order : groupOrderRepository.findAll(Sort.by(Sort.Direction.DESC, "groupOrderId"))) {
             if(order.getGroupOrderCreated().plusMinutes(order.getGroupOrderTimeout()).isBefore(LocalDateTime.now())){
                 order.setGroupOrderValid(Boolean.FALSE);
+                groupOrderRepository.save(order);
             }
             if((LocalDate.now().atStartOfDay()).isBefore(order.getGroupOrderCreated())){
                 groupOrders.add(modelMapper.map(order, GroupOrderDTO.class));

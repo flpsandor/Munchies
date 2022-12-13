@@ -40,6 +40,10 @@
                 <td th:text="*{grouporder.groupOrderEmployee}"></td>
             </tr>
             <tr>
+                <td>Order URL: </td>
+                <td th:text="'http://localhost:8080/orders/group-order-items/'+*{grouporder.groupOrderId}"></td>
+            </tr>
+            <tr>
                 <td>Order valid from:</td>
                 <td th:text="*{grouporder.groupOrderCreated}"></td>
             </tr>
