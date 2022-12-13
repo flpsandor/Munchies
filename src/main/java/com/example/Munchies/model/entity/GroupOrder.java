@@ -30,10 +30,7 @@ public class GroupOrder {
     @Column(name="group_order_employee_id")
     private String groupOrderEmployee;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_order_restaurant_id", referencedColumnName = "restaurant_id")
     private Restaurant restaurant;
-
-    @OneToMany
-    private List<OrderItem> orderItemList;
 }
