@@ -20,27 +20,17 @@
         <table class="table table-striped table-product">
             <thead>
             <tr>
-                <th colspan="2">Action</th>
-                <td>
-                    <div class="btn-group float-end">
-                        <a th:href="@{'/orders/order-item/add/'+${grouporder.groupOrderId}}"
-                           class="btn btn-success btn-sm">Add item in order</a>
-                    </div>
-
-                </td>
-            </tr>
-            <tr>
                 <th scope="col">Employee name</th>
                 <th scope="col">Order description</th>
                 <th scope="col">Order price</th>
             </tr>
             </thead>
             <tbody>
-                <tr th:each="orderitem: ${orderitems}">
-                    <td th:text="${orderitem.orderItemEmployee}"></td>
-                    <td th:text="${orderitem.orderItemDescription}"></td>
-                    <td th:text="${orderitem.orderItemPrice}"></td>
-                </tr>
+            <tr th:each="orderitem: ${orderitems}">
+                <td th:text="${orderitem.orderItemEmployee}"></td>
+                <td th:text="${orderitem.orderItemDescription}"></td>
+                <td th:text="${orderitem.orderItemPrice}"></td>
+            </tr>
             </tbody>
         </table>
     </div>
