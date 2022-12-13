@@ -37,6 +37,7 @@ public class SecurityConfiguration {
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/admin")
                 .failureUrl("/login?error=true")
                 .and()
                 .csrf().disable();
