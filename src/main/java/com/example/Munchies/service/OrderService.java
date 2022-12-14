@@ -118,6 +118,8 @@ public class OrderService {
         groupOrderSave.setGroupOrderCreated(LocalDateTime.now());
         groupOrderSave.setRestaurant(restaurant.get());
         groupOrderRepository.save(groupOrderSave);
-        return modelMapper.map(groupOrderSave, GroupOrderDTO.class);
+        var tmp = modelMapper.map(groupOrderSave,GroupOrderDTO.class);
+        tmp.setGroupOrderValid(Boolean.TRUE);
+        return tmp;
     }
 }
