@@ -22,7 +22,7 @@
                     <a class="nav-link" th:href="@{/restaurants/}">List of restaurants</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/orders/add}">Create new group order</a>
+                    <a class="nav-link" th:href="@{/restaurants/order/add}">Create new group order</a>
                 </li>
             </ul>
         </div>
@@ -39,13 +39,13 @@
                 <td>
                     <th:block th:switch="${grouporder.groupOrderValid}">
                         <div class="btn-group float-end" th:case="true">
-                            <a th:href="@{'/orders/order-item/add/'+${grouporder.groupOrderId}}"
+                            <a th:href="@{'/restaurants/order/'+${grouporder.groupOrderId}+'/order-item/add'}"
                                class="btn btn-success btn-sm">Add item in order</a>
-                            <a th:href="@{'/orders/group-order-items/'+${grouporder.groupOrderId}}"
+                            <a th:href="@{'/restaurants/order/'+${grouporder.groupOrderId}+'/group-order-items'}"
                                class="btn btn-info btn-sm">View all order items in group order</a>
                         </div>
                         <div class="btn-group float-end" th:case="false">
-                            <a th:href="@{'/orders/group-order-items/'+${grouporder.groupOrderId}}"
+                            <a th:href="@{'/restaurants/order/'+${grouporder.groupOrderId}+'group-order-items/'}"
                                class="btn btn-info btn-sm">View all order items in group order</a>
                         </div>
                     </th:block>
@@ -59,7 +59,7 @@
             </tr>
             <tr>
                 <td>Order URL:</td>
-                <td><a target="_blank" th:href="@{http://localhost:8080/orders/group-order-items/{id}(id=${grouporder.groupOrderId})}">Link</a></td>
+                <td><a target="_blank" th:href="@{http://localhost:8080/restaurants/order/{id}/group-order-items/(id=${grouporder.groupOrderId})}">Link</a></td>
             </tr>
             <tr>
                 <td>Order valid from:</td>

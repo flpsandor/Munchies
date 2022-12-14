@@ -32,20 +32,17 @@ public class OrderService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    private Boolean checkIfGroupOrderIsValid(GroupOrder groupOrder){
-        if(groupOrder.getGroupOrderCreated().plusMinutes(groupOrder.getGroupOrderTimeout()).isBefore(LocalDateTime.now())){
-            groupOrder.setGroupOrderValid(Boolean.FALSE);
-            groupOrderRepository.save(groupOrder);
-            return false;
-        }
-        return true;
+    private Boolean isGroupOrderValid(GroupOrder groupOrder){
+        return !groupOrder.getGroupOrderCreated().plusMinutes(groupOrder.getGroupOrderTimeout()).isBefore(LocalDateTime.now());
     }
 
     public List<GroupOrderDTO> findAll() {
         List<GroupOrderDTO> groupOrders = new ArrayList<>();
         for (var order : groupOrderRepository.findAll(Sort.by(Sort.Direction.DESC, "groupOrderId"))) {
-            if(checkIfGroupOrderIsValid(order)){
-                groupOrders.add(modelMapper.map(order, GroupOrderDTO.class));
+            if(isGroupOrderValid(order)){
+                var tmp = modelMapper.map(order, GroupOrderDTO.class);
+                tmp.setGroupOrderValid(Boolean.TRUE);
+                groupOrders.add(tmp);
             }
         }
         return groupOrders;
@@ -54,12 +51,14 @@ public class OrderService {
     public GroupOrderDTO createGroupOrder(GroupOrderCreationDTO groupOrder) {
         var groupOrderSave = modelMapper.map(groupOrder, GroupOrder.class);
         var timeout = groupOrderSave.getGroupOrderTimeout();
-        if(timeout == null || timeout==0)
+        if(timeout == null || timeout==0){
             groupOrderSave.setGroupOrderTimeout(10);
-        groupOrderSave.setGroupOrderValid(Boolean.TRUE);
+        }
         groupOrderSave.setGroupOrderCreated(LocalDateTime.now());
         groupOrderRepository.save(groupOrderSave);
-        return modelMapper.map(groupOrderSave, GroupOrderDTO.class);
+        var tmp = modelMapper.map(groupOrderSave, GroupOrderDTO.class);
+        tmp.setGroupOrderValid(Boolean.TRUE);
+        return tmp;
     }
 
     public OrderItemDTO createOrderItem(Long id, OrderItemCreationDTO orderItem) throws Exception {
@@ -67,7 +66,7 @@ public class OrderService {
         if(groupOrder.isEmpty()){
             return null;
         }
-        if(!checkIfGroupOrderIsValid(groupOrder.get())){
+        if(!isGroupOrderValid(groupOrder.get())){
             throw new Exception("Group order timeout");
         }
         var orderItemSave = modelMapper.map(orderItem, OrderItem.class);
@@ -98,7 +97,9 @@ public class OrderService {
         if(groupOrder.isEmpty()){
             return null;
         }
-        return modelMapper.map(groupOrder.get(), GroupOrderDTO.class);
+        var tmp = modelMapper.map(groupOrder.get(), GroupOrderDTO.class);
+        tmp.setGroupOrderValid(Boolean.TRUE);
+        return tmp;
     }
 
     public GroupOrderDTO createGroupOrder(Long id, GroupOrderCreationDTO groupOrder) {
@@ -110,7 +111,6 @@ public class OrderService {
         var timeout = groupOrderSave.getGroupOrderTimeout();
         if(timeout == null || timeout==0)
             groupOrderSave.setGroupOrderTimeout(10);
-        groupOrderSave.setGroupOrderValid(Boolean.TRUE);
         groupOrderSave.setGroupOrderCreated(LocalDateTime.now());
         groupOrderSave.setRestaurant(restaurant.get());
         groupOrderRepository.save(groupOrderSave);

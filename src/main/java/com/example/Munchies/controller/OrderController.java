@@ -25,21 +25,21 @@ public class OrderController {
         this.restaurantService = restaurantService;
     }
 
-    @GetMapping("/orders/add")
+    @GetMapping("/restaurants/order/add")
     public String addNewGroupOrder(Model model) {
         model.addAttribute("grouporder", new GroupOrderCreationDTO());
         model.addAttribute("restaurants", restaurantService.findAll());
         return "new-group-order";
     }
 
-    @GetMapping("/orders/add/restaurant/{id}")
+    @GetMapping("/restaurants/{id}/order/add")
     public String addNewGroupOrderWithRestaurantId(@PathVariable("id") Long id, Model model){
         model.addAttribute("id", id);
         model.addAttribute("grouporder", new GroupOrderCreationDTO());
         return "new-group-order-with-restaurant";
     }
 
-    @PostMapping("/orders/save/restaurant/{id}")
+    @PostMapping("/restaurants/{id}/order/save")
     public String saveGroupOrderWithRestaurant(@ModelAttribute("id") Long id, @ModelAttribute("grouporder") GroupOrderCreationDTO groupOrder, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
             return "new-group-order";
@@ -48,7 +48,7 @@ public class OrderController {
         return "group-order-details";
     }
 
-    @PostMapping("/orders/save")
+    @PostMapping("/restaurants/order/save")
     public String saveGroupOrder(@Valid @ModelAttribute("grouporder") GroupOrderCreationDTO groupOrder, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()){
             return "new-group-order";
@@ -57,26 +57,26 @@ public class OrderController {
         return "group-order-details";
     }
 
-    @GetMapping("/orders/group-order-items/{id}")
+    @GetMapping("/restaurants/order/{id}/group-order-items")
     public String findItemsInOrder(@PathVariable("id") Long id, Model model) {
         model.addAttribute("orderitems", orderService.findAllByGroupId(id));
         model.addAttribute("grouporder", orderService.findById(id));
         return "group-order-details";
     }
 
-    @GetMapping("/orders/order-item/add/{id}")
+    @GetMapping("/restaurants/order/{id}/order-item/add")
     public String addItemInOrder(@PathVariable Long id, Model model) {
         model.addAttribute("orderid", id);
         model.addAttribute("orderitem", new OrderItemCreationDTO());
         return "add-item";
     }
 
-    @PostMapping("/orders/order-item/save/{id}")
+    @PostMapping("/restaurants/order/{id}/order-item/save")
     public String saveItemInOrder(@PathVariable("id") Long id, @ModelAttribute("orderitem") @Valid OrderItemCreationDTO orderItem, BindingResult bindingResult) throws Exception {
         if(bindingResult.hasErrors()){
             return "add-item";
         }
         orderService.createOrderItem(id, orderItem);
-        return "redirect:/orders/group-order-items/{id}";
+        return "redirect:/restaurants/order/{id}/group-order-items/";
     }
 }

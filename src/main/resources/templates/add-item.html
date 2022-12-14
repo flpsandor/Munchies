@@ -38,7 +38,7 @@
     <div class="row">
         <h2>Add item</h2>
     </div>
-    <form method="post" th:action="@{/orders/order-item/save/{id}(id=${id})}">
+    <form method="post" th:action="@{/restaurants/order/{id}/order-item/save/(id=${id})}">
         <div class="form-group">
             <label for="employee">Employee name</label>
             <input class="form-control" id="employee" placeholder="Enter your name" th:field="*{orderitem.orderItemEmployee}" type="text"/>

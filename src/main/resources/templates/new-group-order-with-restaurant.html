@@ -25,7 +25,7 @@
                     <a class="nav-link" th:href="@{/restaurants/add}">Add restaurant</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/orders/add}">Create new group order</a>
+                    <a class="nav-link" th:href="@{/restaurants/order/add}">Create new group order</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link" th:href="@{/logout}">Logout</a>
@@ -38,7 +38,7 @@
     <div class="row">
         <h2>Create new group order</h2>
     </div>
-    <form method="post" th:action="@{/orders/save/restaurant/{id}(id=${id})}">
+    <form method="post" th:action="@{/restaurants/{id}/order/save(id=${id})}">
         <div class="form-group">
             <label for="employee">Employee name</label>
             <input class="form-control" id="employee" placeholder="Enter your name" th:field="*{grouporder.groupOrderEmployee}" type="text"/>
