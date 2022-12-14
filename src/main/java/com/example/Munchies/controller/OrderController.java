@@ -1,6 +1,7 @@
 package com.example.Munchies.controller;
 
 import com.example.Munchies.model.dto.GroupOrderCreationDTO;
+import com.example.Munchies.model.dto.OrderItemCreationDTO;
 import com.example.Munchies.service.OrderService;
 import com.example.Munchies.service.RestaurantService;
 import org.springframework.stereotype.Controller;
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 
 @Controller
-public class GroupOrderController {
+public class OrderController {
 
     private final OrderService orderService;
     private final RestaurantService restaurantService;
 
-    public GroupOrderController(OrderService orderService, RestaurantService restaurantService) {
+    public OrderController(OrderService orderService, RestaurantService restaurantService) {
         this.orderService = orderService;
         this.restaurantService = restaurantService;
     }
@@ -61,5 +62,21 @@ public class GroupOrderController {
         model.addAttribute("orderitems", orderService.findAllByGroupId(id));
         model.addAttribute("grouporder", orderService.findById(id));
         return "group-order-details";
+    }
+
+    @GetMapping("/orders/order-item/add/{id}")
+    public String addItemInOrder(@PathVariable Long id, Model model) {
+        model.addAttribute("orderid", id);
+        model.addAttribute("orderitem", new OrderItemCreationDTO());
+        return "add-item";
+    }
+
+    @PostMapping("/orders/order-item/save/{id}")
+    public String saveItemInOrder(@PathVariable("id") Long id, @ModelAttribute("orderitem") @Valid OrderItemCreationDTO orderItem, BindingResult bindingResult) throws Exception {
+        if(bindingResult.hasErrors()){
+            return "add-item";
+        }
+        orderService.createOrderItem(id, orderItem);
+        return "redirect:/orders/group-order-items/{id}";
     }
 }

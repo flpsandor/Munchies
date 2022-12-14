@@ -31,7 +31,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin","/restaurants/add/**", "/restaurants/edit/**", "/restaurants/delete/**")
+                .antMatchers("/admin", "/restaurants/add/**", "/restaurants/edit/**", "/restaurants/delete/**")
                 .authenticated()
                 .and()
                 .formLogin()
@@ -43,4 +43,5 @@ public class SecurityConfiguration {
                 .csrf().disable();
         return http.build();
     }
+
 }
