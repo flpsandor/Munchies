@@ -73,7 +73,6 @@ public class OrderService {
         orderItemSave.setGroupOrder(groupOrder.get());
         orderItemSave.setOrderItemCreated(LocalDateTime.now());
         orderItemRepository.save(orderItemSave);
-
         return modelMapper.map(orderItemSave, OrderItemDTO.class);
     }
 
@@ -98,7 +97,11 @@ public class OrderService {
             return null;
         }
         var tmp = modelMapper.map(groupOrder.get(), GroupOrderDTO.class);
-        tmp.setGroupOrderValid(Boolean.TRUE);
+        if (isGroupOrderValid(groupOrder.get())) {
+            tmp.setGroupOrderValid(Boolean.TRUE);
+        } else {
+            tmp.setGroupOrderValid(Boolean.FALSE);
+        }
         return tmp;
     }
 
@@ -109,8 +112,9 @@ public class OrderService {
             return null;
         }
         var timeout = groupOrderSave.getGroupOrderTimeout();
-        if(timeout == null || timeout==0)
+        if(timeout == null || timeout==0) {
             groupOrderSave.setGroupOrderTimeout(10);
+        }
         groupOrderSave.setGroupOrderCreated(LocalDateTime.now());
         groupOrderSave.setRestaurant(restaurant.get());
         groupOrderRepository.save(groupOrderSave);
