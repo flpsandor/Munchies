@@ -64,6 +64,13 @@ public class OrderController {
         return "group-order-details";
     }
 
+    @GetMapping("/restaurants/order/{id}/order-items-data")
+    public String reloadItemsInOrder(@PathVariable("id") Long id, Model model){
+        model.addAttribute("orderitems",orderService.findAllByGroupId(id));
+        model.addAttribute("grouporder", orderService.findById(id));
+        return "group-order-details::orderitems";
+    }
+
     @GetMapping("/restaurants/order/{id}/order-item/add")
     public String addItemInOrder(@PathVariable Long id, Model model) {
         model.addAttribute("orderid", id);
