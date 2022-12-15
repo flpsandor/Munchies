@@ -1,10 +1,12 @@
 package com.example.Munchies.service;
 
 import com.example.Munchies.model.entity.Employee;
+import com.example.Munchies.model.entity.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class MyEmployeePrincipal implements UserDetails {
     private final Employee employee;

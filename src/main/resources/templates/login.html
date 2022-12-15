@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,9 +10,9 @@
 </head>
 <body>
 <div class="container"
-     style="height: 300px; width: 300px; position: absolute; top: 50%; left:50%; margin: -150px 0 0 -150px">
-    <div class="row">
-        <h2>Munchies</h2>
+     style="width:350px; margin: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="row float-center">
+        <a class="link-dark text-decoration-none" th:href="@{/}"><h2 class="display-1">Munchies</h2></a>
         <form method="post" th:action="@{/login}">
             <div class="form-group">
                 <label for="username">Email</label>
@@ -23,7 +24,7 @@
                 <input class="form-control" id="password" name="password" placeholder="Enter password"
                        type="password">
             </div>
-            <button class="btn btn-primary margin-top" type="submit">Login</button>
+            <button class="btn btn-primary" style="margin-top: 20px; " type="submit">Login</button>
         </form>
     </div>
 </div>

@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -32,18 +31,17 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .anyRequest()
+                .antMatchers("/admin", "/restaurants/add/**", "/restaurants/edit/**", "/restaurants/delete/**")
                 .authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .permitAll()
+                .defaultSuccessUrl("/admin")
                 .failureUrl("/login?error=true")
                 .and()
-                .logout()
-                .logoutUrl("/logout")
-                .addLogoutHandler(new SecurityContextLogoutHandler());
+                .csrf().disable();
         return http.build();
     }
+
 }

@@ -4,6 +4,7 @@ import com.example.Munchies.model.dto.RestaurantCreationDTO;
 import com.example.Munchies.model.dto.RestaurantDTO;
 import com.example.Munchies.model.entity.Restaurant;
 import com.example.Munchies.repository.DeliveryInfoRepository;
+import com.example.Munchies.repository.GroupOrderRepository;
 import com.example.Munchies.repository.RestaurantRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,14 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final DeliveryInfoRepository deliveryInfoRepository;
     private final ModelMapper modelMapper;
+    private final GroupOrderRepository groupOrderRepository;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, DeliveryInfoRepository deliveryInfoRepository, ModelMapper modelMapper) {
+    public RestaurantService(RestaurantRepository restaurantRepository, DeliveryInfoRepository deliveryInfoRepository, ModelMapper modelMapper,
+                             GroupOrderRepository groupOrderRepository) {
         this.restaurantRepository = restaurantRepository;
         this.deliveryInfoRepository = deliveryInfoRepository;
         this.modelMapper = modelMapper;
+        this.groupOrderRepository = groupOrderRepository;
     }
 
     public String setShortName(String name) {
@@ -30,8 +34,7 @@ public class RestaurantService {
     }
 
     public List<RestaurantDTO> findAll() {
-        // fix latter
-        ArrayList<RestaurantDTO> restaurants = new ArrayList<>();
+        List<RestaurantDTO> restaurants = new ArrayList<>();
         for (var restaurant : restaurantRepository.findAll()) {
             restaurants.add(modelMapper.map(restaurant, RestaurantDTO.class));
         }
@@ -50,8 +53,8 @@ public class RestaurantService {
     public void deleteRestaurant(Long id) {
         var restaurantDb = restaurantRepository.findById(id);
         restaurantDb.ifPresent(value -> {
-            restaurantRepository.delete(value);
             deliveryInfoRepository.delete(value.getDeliveryInfo());
+            restaurantRepository.delete(value);
         });
     }
 

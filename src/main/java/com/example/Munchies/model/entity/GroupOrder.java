@@ -16,16 +16,18 @@ public class GroupOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="group_order_id")
     private Long groupOrderId;
+    @Column(name="group_order_timeout")
+    private Integer groupOrderTimeout;
+    @Column(name="group_order_total_price")
+    private Double groupOrderTotalPrice;
     @Column(name="group_order_created")
     private LocalDateTime groupOrderCreated;
     @Column(name="group_order_updated")
     private LocalDateTime groupOrderUpdated;
+    @Column(name="group_order_employee_id")
+    private String groupOrderEmployee;
 
-    @ManyToOne
-    @JoinColumn(name = "group_order_employee_id", referencedColumnName = "employee_id")
-    private Employee employee;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_order_restaurant_id", referencedColumnName = "restaurant_id")
     private Restaurant restaurant;
 }

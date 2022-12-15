@@ -1,0 +1,2 @@
+ALTER TABLE munchies.order_item
+DROP COLUMN order_item_quantity

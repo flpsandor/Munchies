@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -41,4 +43,8 @@ public class Restaurant {
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "restaurant")
     private DeliveryInfo deliveryInfo;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GroupOrder> groupOrders = new ArrayList<>();
+
 }
