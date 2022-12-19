@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
@@ -30,11 +31,12 @@ public class RestaurantController {
     }
 
     @PostMapping("/restaurants/save")
-    public String saveRestaurant( @ModelAttribute("restaurant") @Valid RestaurantCreationDTO restaurant, BindingResult bindingResult) {
+    public String saveRestaurant( @ModelAttribute("restaurant") @Valid RestaurantCreationDTO restaurant, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "add-restaurant";
         }
         restaurantService.createRestaurant(restaurant);
+        response.setStatus(HttpServletResponse.SC_CREATED);
         return "redirect:/restaurants/";
     }
 
@@ -59,17 +61,19 @@ public class RestaurantController {
     }
 
     @PostMapping("/restaurants/update/{id}")
-    public String updateRestaurant(@PathVariable("id") Long id, @Valid @ModelAttribute("restaurant") RestaurantCreationDTO restaurant, BindingResult bindingResult){
+    public String updateRestaurant(@PathVariable("id") Long id, @Valid @ModelAttribute("restaurant") RestaurantCreationDTO restaurant, BindingResult bindingResult, HttpServletResponse response){
         if(bindingResult.hasErrors()){
             return "update-restaurant";
         }
         restaurantService.updateRestaurant(id, restaurant);
+        response.setStatus(HttpServletResponse.SC_CREATED);
         return "redirect:/restaurants/restaurant-details/{id}";
     }
 
     @GetMapping("/restaurants/delete/{id}")
-    public String deleteRestaurant(@PathVariable Long id) {
+    public String deleteRestaurant(@PathVariable Long id, HttpServletResponse response) {
         restaurantService.deleteRestaurant(id);
+        response.setStatus(HttpServletResponse.SC_ACCEPTED);
         return "redirect:/restaurants/";
     }
 }

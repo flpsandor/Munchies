@@ -1,6 +1,7 @@
 package com.example.munchies.controller;
 
 import com.example.munchies.exception.GroupOrderNotExistException;
+import com.example.munchies.exception.OrderNotValidException;
 import com.example.munchies.exception.RestaurantNotExistException;
 import com.example.munchies.model.dto.GroupOrderCreationDTO;
 import com.example.munchies.model.dto.OrderItemCreationDTO;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
@@ -42,20 +44,22 @@ public class OrderController {
     }
 
     @PostMapping("/restaurants/{id}/order/save")
-    public String saveGroupOrderWithRestaurant(@ModelAttribute("id") Long id, @ModelAttribute("grouporder") GroupOrderCreationDTO groupOrder, BindingResult bindingResult, Model model) throws RestaurantNotExistException {
+    public String saveGroupOrderWithRestaurant(@ModelAttribute("id") Long id, @ModelAttribute("grouporder") GroupOrderCreationDTO groupOrder, BindingResult bindingResult, Model model, HttpServletResponse response) throws RestaurantNotExistException {
         if (bindingResult.hasErrors()) {
             return "new-group-order";
         }
         model.addAttribute("grouporder", orderService.createGroupOrder(id, groupOrder));
+        response.setStatus(HttpServletResponse.SC_CREATED);
         return "group-order-details";
     }
 
     @PostMapping("/restaurants/order/save")
-    public String saveGroupOrder(@Valid @ModelAttribute("grouporder") GroupOrderCreationDTO groupOrder, BindingResult bindingResult, Model model) {
+    public String saveGroupOrder(@Valid @ModelAttribute("grouporder") GroupOrderCreationDTO groupOrder, BindingResult bindingResult, Model model, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "new-group-order";
         }
         model.addAttribute("grouporder", orderService.createGroupOrder(groupOrder));
+        response.setStatus(HttpServletResponse.SC_CREATED);
         return "group-order-details";
     }
 
@@ -81,11 +85,12 @@ public class OrderController {
     }
 
     @PostMapping("/restaurants/order/{id}/order-item/save")
-    public String saveItemInOrder(@PathVariable("id") Long id, @ModelAttribute("orderitem") @Valid OrderItemCreationDTO orderItem, BindingResult bindingResult) throws Exception {
+    public String saveItemInOrder(@PathVariable("id") Long id, @ModelAttribute("orderitem") @Valid OrderItemCreationDTO orderItem, BindingResult bindingResult, HttpServletResponse response) throws GroupOrderNotExistException, OrderNotValidException {
         if (bindingResult.hasErrors()) {
             return "add-item";
         }
         orderService.createOrderItem(id, orderItem);
+        response.setStatus(HttpServletResponse.SC_CREATED);
         return "redirect:/restaurants/order/{id}/group-order-items/";
     }
 }
