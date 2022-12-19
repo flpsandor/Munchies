@@ -50,8 +50,7 @@
         </tr>
         <tr>
             <td>Order URL:</td>
-            <td><a target="_blank" th:href="@{http://localhost:8080/restaurants/order/{id}/group-order-items/(id=${grouporder.groupOrderId})}">Link</a></td>
-
+            <td><a th:href="@{__${#httpServletRequest.requestURI}__}">Link</a></td>
         </tr>
         <tr>
             <td>Restaurant name:</td>
