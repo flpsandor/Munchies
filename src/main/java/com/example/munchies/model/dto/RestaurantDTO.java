@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class RestaurantDTO {
     private Long restaurantId;
     private String restaurantName;

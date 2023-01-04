@@ -1,13 +1,16 @@
 package com.example.munchies.service;
 
+import com.example.munchies.exception.OrderWithRestaurantException;
 import com.example.munchies.exception.RestaurantNotExistException;
 import com.example.munchies.model.dto.RestaurantCreationDTO;
 import com.example.munchies.model.dto.RestaurantDTO;
 import com.example.munchies.model.entity.Restaurant;
 import com.example.munchies.repository.DeliveryInfoRepository;
+import com.example.munchies.repository.GroupOrderRepository;
 import com.example.munchies.repository.RestaurantRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,11 +22,15 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final DeliveryInfoRepository deliveryInfoRepository;
     private final ModelMapper modelMapper;
+    private final OrderService orderService;
+    private final GroupOrderRepository groupOrderRepository;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, DeliveryInfoRepository deliveryInfoRepository, ModelMapper modelMapper) {
+    public RestaurantService(RestaurantRepository restaurantRepository, DeliveryInfoRepository deliveryInfoRepository, ModelMapper modelMapper, OrderService orderService, GroupOrderRepository groupOrderRepository) {
         this.restaurantRepository = restaurantRepository;
         this.deliveryInfoRepository = deliveryInfoRepository;
         this.modelMapper = modelMapper;
+        this.orderService = orderService;
+        this.groupOrderRepository = groupOrderRepository;
     }
 
     public String setShortName(String name) {
@@ -47,12 +54,19 @@ public class RestaurantService {
         return modelMapper.map(restaurantSave, RestaurantDTO.class);
     }
 
-    public void deleteRestaurant(Long id) {
+    @Transactional(rollbackFor = {OrderWithRestaurantException.class})
+    public void deleteRestaurant(Long id) throws RestaurantNotExistException, OrderWithRestaurantException {
         var restaurantDb = restaurantRepository.findById(id);
-        restaurantDb.ifPresent(value -> {
-            deliveryInfoRepository.delete(value.getDeliveryInfo());
-            restaurantRepository.delete(value);
-        });
+        if (restaurantDb.isEmpty()) {
+            throw new RestaurantNotExistException("Restaurant does not exist", new RuntimeException());
+        }
+        for(var groupOrder : groupOrderRepository.findGroupOrderByRestaurant(restaurantDb.get())){
+            if(orderService.isGroupOrderValid(groupOrder)){
+                throw new OrderWithRestaurantException("Restaurant cant be deleted have active orders", new RuntimeException());
+            }
+        }
+        deliveryInfoRepository.delete(restaurantDb.get().getDeliveryInfo());
+        restaurantRepository.delete(restaurantDb.get());
     }
 
     public RestaurantDTO restaurantDetails(Long id) throws RestaurantNotExistException {
