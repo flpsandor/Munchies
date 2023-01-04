@@ -35,7 +35,7 @@ public class OrderService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    private boolean isGroupOrderValid(GroupOrder groupOrder){
+    public boolean isGroupOrderValid(GroupOrder groupOrder){
         return !groupOrder.getGroupOrderCreated().plusMinutes(groupOrder.getGroupOrderTimeout()).isBefore(LocalDateTime.now());
     }
 

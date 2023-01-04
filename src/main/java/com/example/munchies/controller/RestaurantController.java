@@ -1,5 +1,6 @@
 package com.example.munchies.controller;
 
+import com.example.munchies.exception.OrderWithRestaurantException;
 import com.example.munchies.exception.RestaurantNotExistException;
 import com.example.munchies.model.dto.RestaurantCreationDTO;
 import com.example.munchies.service.RestaurantService;
@@ -71,7 +72,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/restaurants/delete/{id}")
-    public String deleteRestaurant(@PathVariable Long id, HttpServletResponse response) {
+    public String deleteRestaurant(@PathVariable Long id, HttpServletResponse response) throws RestaurantNotExistException, OrderWithRestaurantException {
         restaurantService.deleteRestaurant(id);
         response.setStatus(HttpServletResponse.SC_ACCEPTED);
         return "redirect:/restaurants/";

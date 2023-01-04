@@ -1,10 +1,7 @@
 package com.example.munchies.model.dto;
 
 import com.example.munchies.model.entity.Restaurant;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -21,4 +18,6 @@ public class GroupOrderDTO {
     private Integer groupOrderTimeout;
     private LocalDateTime groupOrderCreated;
     private Boolean groupOrderValid;
+
+    public String groupOrderUrl;
 }
