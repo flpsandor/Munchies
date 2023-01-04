@@ -27,7 +27,7 @@ public class GroupOrder {
     @Column(name="group_order_employee_id")
     private String groupOrderEmployee;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_order_restaurant_id", referencedColumnName = "restaurant_id")
     private Restaurant restaurant;
 }
